@@ -1,0 +1,69 @@
+\section{The Architecture of the Science Platform}\label{architecture}
+
+\subsection{Design Overview}\label{design-overview}
+
+\subsubsection{Functional Architecture}\label{functional-architecture}
+
+\subsubsection{Deployment Architecture}\label{deployment-architecture}
+
+\subsection{Data Access and Storage}\label{data-access-and-storage}
+
+\subsubsection{Databases}\label{databases}
+
+\paragraph{Database content overview}\label{database-content-overview}
+
+\begin{itemize}
+\item Image and Visit metadata
+\item Catalogs
+\item Composite data
+\item Observatory metadata (including EFD)
+\item Reference catalogs
+\end{itemize}
+
+\paragraph{Database technologies}\label{database-technologies}
+
+\begin{itemize}
+\item Conventional
+\item Qserv
+\end{itemize}
+
+\subsubsection{Images}\label{images}
+
+\subsubsection{LSST-specific Objects}\label{lsst-specific-objects}
+
+("ORM-ish" behavior, composite objects, etc.)
+
+\subsubsection{Data Access Services}\label{data-access-services}
+
+(This is a description of the functional architecture of the services; a detailed description of the APIs offered by the services is in section 5 below)
+
+\subsubsection{User Catalog Data Support}\label{user-catalog-data-support}
+
+("Level 3 catalogs")
+
+\subsubsection{User Workspace Storage}\label{user-workspace-storage}
+
+(Generic file-oriented storage, assumed to also support "Level 3 image data", e.g., custom coadds)
+
+\subsubsection{Data Access Permissions and Quotas}\label{data-access-permissions-and-quotas}
+
+\subsubsection{Support of Previous Releases}\label{support-of-previous-releases}
+
+(This could go elsewhere in the outline hierarchy)
+
+\subsection{Computing Resources}\label{computing-resources}
+
+\subsubsection{Basic user compute services}\label{basic-user-compute-services}
+
+(including the services used for the JupyterLab Python kernels)
+
+\subsubsection{Large-scale batch and parallel computing}\label{large-scale-batch-and-parallel-computing}
+
+\subsubsection{Resource management}\label{resource-management}
+
+\subsection{Authentication and Authorization}\label{authentication-and-authorization}
+
+\subsection{Cybersecurity Considerations}\label{cybersecurity-considerations}
+
+\subsection{Additional Support Services}\label{additional-support-services}
+
