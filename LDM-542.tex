@@ -15,6 +15,8 @@
 
 \author{%
 Gregory Dubois-Felsmann
+and
+Kian-Tat Lim
 }
 
 \setDocRef{LDM-542}
@@ -33,7 +35,7 @@ This document describes the design of the LSST Science Platform, the primary use
 % Fields: VERSION, DATE, DESCRIPTION, OWNER NAME.
 % See LPM-51 for version number policy.
 \setDocChangeRecord{%
-  \addtohist{1}{YYY-MM-DD}{Unreleased.}{Gregory Dubois-Felsmann}
+  \addtohist{1}{YYY-MM-DD}{Unreleased.}{Gregory Dubois-Felsmann, K-T Lim}
 }
 
 \begin{document}
@@ -42,7 +44,153 @@ This document describes the design of the LSST Science Platform, the primary use
 % Table of contents is added automatically with the "toc" class option.
 \maketitle
 
-% ADD CONTENT HERE
+\section{Introduction}\label{introduction}
+
+\subsection{The Portal Aspect}\label{portal-aspect-intro}
+
+\subsection{The Notebook Aspect}\label{notebook-aspect-intro}
+
+\subsection{The API Aspect}\label{api-aspect-intro}
+
+\section{The Architecture of the Science Platform}\label{architecture}
+
+\subsection{Design Overview}\label{design-overview}
+
+\subsubsection{Functional Architecture}\label{functional-architecture}
+
+\subsubsection{Deployment Architecture}\label{deployment-architecture}
+
+\subsection{Data Access and Storage}\label{data-access-and-storage}
+
+\subsubsection{Databases}\label{databases}
+
+\paragraph{Database content overview}\label{database-content-overview}
+
+\begin{itemize}
+\item Image and Visit metadata
+\item Catalogs
+\item Composite data
+\item Observatory metadata (including EFD)
+\item Reference catalogs
+\end{itemize}
+
+\paragraph{Database technologies}\label{database-technologies}
+
+\begin{itemize}
+\item Conventional
+\item Qserv
+\end{itemize}
+
+\subsubsection{Images}\label{images}
+
+\subsubsection{LSST-specific Objects}\label{lsst-specific-objects}
+
+("ORM-ish" behavior, composite objects, etc.)
+
+\subsubsection{Data Access Services}\label{data-access-services}
+
+(This is a description of the functional architecture of the services; a detailed description of the APIs offered by the services is in section 5 below)
+
+\subsubsection{User Catalog Data Support}\label{user-catalog-data-support}
+
+("Level 3 catalogs")
+
+\subsubsection{User Workspace Storage}\label{user-workspace-storage}
+
+(Generic file-oriented storage, assumed to also support "Level 3 image data", e.g., custom coadds)
+
+\subsubsection{Data Access Permissions and Quotas}\label{data-access-permissions-and-quotas}
+
+\subsubsection{Support of Previous Releases}\label{support-of-previous-releases}
+
+(This could go elsewhere in the outline hierarchy)
+
+\subsection{Computing Resources}\label{computing-resources}
+
+\subsubsection{Basic user compute services}\label{basic-user-compute-services}
+
+(including the services used for the JupyterLab Python kernels)
+
+\subsubsection{Large-scale batch and parallel computing}\label{large-scale-batch-and-parallel-computing}
+
+\subsubsection{Resource management}\label{resource-management}
+
+\subsection{Authentication and Authorization}\label{authentication-and-authorization}
+
+\subsection{Cybersecurity Considerations}\label{cybersecurity-considerations}
+
+\subsection{Additional Support Services}\label{additional-support-services}
+
+\section{The Portal Aspect}\label{portal-aspect}
+
+\subsection{Generic Data Browsing}\label{generic-data-browsing}
+
+\subsection{Documentation Delivery}\label{documentation-delivery}
+
+\subsection{Semantics-aware Workflows}\label{semantics-aware-workflows}
+
+\subsection{Use of the LSST Stack}\label{use-of-the-lsst-stack}
+
+\subsection{Extensibility of Visualizations}\label{extensibility-of-visualizations}
+
+\subsection{Extensibility of the UI}\label{extensibility-of-the-ui}
+
+\section{The Notebook Aspect}\label{notebook-aspect}
+
+\subsection{JupyterHub / JupyterLab service}\label{jupyterhub-jupyterlab-service}
+
+\subsection{Pre-installed LSST software}\label{pre-installed-lsst-software}
+
+\subsection{Pre-configured access to LSST data}\label{pre-configured-access-to-lsst-data}
+
+\section{The API Aspect}\label{api-aspect}
+
+\subsection{Overview - VO services and custom LSST services}\label{api-overview}
+
+\subsection{Catalog and other tabular data access}\label{catalog-and-other-tabular-data-access}
+
+\subsubsection{TAP and other VO-compliant services}\label{tap-and-other-vo-compliant-services}
+
+\paragraph{ADQL implementation}\label{adql-implementation}
+
+\paragraph{Return data formats}\label{return-data-formats}
+
+\subsubsection{Non-VO catalog interfaces}\label{non-vo-catalog-interfaces}
+
+\subsection{Image data access}\label{image-data-access}
+
+\subsubsection{Image finding}\label{image-finding}
+
+\subsubsection{Image retrieval}\label{image-retrieval}
+
+\subsection{Metadata access}\label{metadata-access}
+
+\subsubsection{Data Releases}\label{data-releases}
+
+\subsubsection{Tables}\label{tables}
+
+\subsubsection{Table Structure}\label{table-structure}
+
+\subsection{User Workspace access}\label{user-workspace-access}
+
+(VOSpace?  WebDAV?)
+
+\section{The Interconnectedness of the Science Platform}\label{interconnectedness-of-the-science-platform}
+
+\subsection{Sharing Data}\label{sharing-data}
+
+\subsection{Sharing Queries}\label{sharing-queries}
+
+\subsection{Sharing State}\label{sharing-state}
+
+\section{Application of the Science Platform inside the Project}\label{application-of-the-science-platform-inside-the-project}
+
+\subsection{Developer Support}\label{developer-support}
+
+\subsection{Commissioning}\label{commissioning}
+
+\subsection{Observatory Operations}\label{observatory-operations}
+
 
 % Include all the relevant bib files.
 % https://lsst-texmf.lsst.io/lsstdoc.html#bibliographies
