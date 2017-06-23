@@ -1,12 +1,55 @@
 \section{The Architecture of the Science Platform}\label{architecture}
 
+This section presents the overall architecture of the LSST Science Platform,
+including its major components and interfaces and design principles.
+
 \subsection{Design Overview}\label{design-overview}
+
+The LSP is a multi-tier architecture with distinct but inter-related
+user-facing "Aspects" over an underlying layer of services that in turn
+rests on computational infrastructure.
 
 \subsubsection{Functional Architecture}\label{functional-architecture}
 
+The Portal Aspect, JupyterLab Aspect, and Web APIs Aspects provide three
+distinct user interfaces.  Internally, the LSP interfaces with the Data
+Backbone via the Data Butler client interface and direct "native" Data Backbone
+interfaces to provide access to the Science Data Archive and (for some
+instances) other data products.  The LSP also has its own data storage for
+Portal configurations, user notebooks, and other user files and databases.  It
+interfaces with compute provisioning services, authentication and authorization
+services, and resource management, including a proposal management system to
+handle requests for resources.  Networking connects the LSP with internal
+systems and the external world and provides a measure of cybersecurity.
+
+The Portal Aspect is implemented using the language-agnostic Web APIs to
+retrieve data.  The JupyterLab Aspect can also use the Web APIs if the user
+desires, either through a VO client or directly as a Web service.
+
 \subsubsection{Deployment Architecture}\label{deployment-architecture}
 
+The LSP is designed to be deployable in multiple locations within the LSST DMS.
+The production instances are the US Data Access Center, the Chilean Data Access
+Center, the Science Validation instance in the NCSA Enclave, and the
+Commissioning Cluster instance in the Base Enclave.  Additional instances are
+used for integration testing in the Integration environment and for science
+pipelines developer usage in the Developer environment.  LSP developers will
+of course instantiate components of the LSP during their own development.
+
+The LSP is composed of multiple services that are containerized and deployed
+using Kubernetes.  The underlying provisioning of compute resources is handled
+by the Provisioning and Deployment Service component of the LSST DMS.  The
+technology to be used for provisioning in this component is being evaluated and
+may vary between instances.  vSphere, HTCondor, SLURM, and OpenStack are all
+potential alternatives.  Provisioning is elastic: JupyterLab dynamically
+instantiates notebooks on demand, and the Portal and Web API services can be
+expanded or contracted as needed.  This elasticity and fault tolerance
+considerations require that the services hold minimal non-persistent state so
+that loss of a single service instance has correspondingly minimal impact on
+users.
+
 \subsection{Data Access and Storage}\label{data-access-and-storage}
+
 
 \subsubsection{Databases}\label{databases}
 
@@ -53,17 +96,61 @@
 
 \subsection{Computing Resources}\label{computing-resources}
 
+The LSP provides access to computing resources to enable users to analyze
+LSST data products, alone and in combination with user-provided data.
+
 \subsubsection{Basic user compute services}\label{basic-user-compute-services}
 
-(including the services used for the JupyterLab Python kernels)
+Users of the Portal Aspect share computing resources allocated to the Portal as
+a whole.  The same strategy is used for the Web APIs.  Within those shared
+resources, per-user accounting is performed for resources such as queries and
+temporary disk space so that resource management policies may be implemented
+if required.
+
+Each user of the JupyterLab Aspect is assigned a virtual machine per notebook.
+The virtual machine can be selected from a menu of preconfigured installations
+of LSST and other software, or users can customize a virtual machine and save
+it for future use.  The resources allocated to the virtual machine are
+defined by policy.
 
 \subsubsection{Large-scale batch and parallel computing}\label{large-scale-batch-and-parallel-computing}
 
-\subsubsection{Resource management}\label{resource-management}
+Users of the LSP (any Aspect) may trigger large-scale, long-latency,
+asynchronous data processing.  This processing is handled by submitting
+jobs to a batch system based on HTCondor.  Mechanisms are provided in the
+three Aspects to monitor the status of batch jobs and retrieve their results.
 
 \subsection{Authentication and Authorization}\label{authentication-and-authorization}
 
+Identity management and associated roles and authorizations are provided by a
+unified LSST system as described in LSE-279.  All uses of all instances of the
+LSP, including the Web APIs Aspect, are authenticated.
+
+\subsection{Resource Management}\label{resource-management}
+
+LSP users in the DACs will receive a certain quota of resources (compute,
+storage, query, bandwidth, etc.).  Usage beyond that quota will be allocated by
+a committee.  Outside the LSP, a proposal management system will track requests
+and allocations that will then be implemented by per-user resource management
+features within each LSP component.
+
 \subsection{Cybersecurity Considerations}\label{cybersecurity-considerations}
+
+The Data Access Center instances of the LSP are the only ones exposed directly
+to the public Internet.  The Science Validation, Commissioning Cluster,
+Integration, and Developer instances are only reachable from LSST-internal
+networks, helping to reduce the attack surface.  The DAC instances are isolated
+(on a different LAN) from the production Level 1 and Level 2 domains within the
+NCSA enclave.  Although they may share underlying computing resources, such
+resources are provisioned for either production or DAC but not both at the
+same time.  The LSST data products within the Data Backbone will be read-only
+to the DAC LSP instances.  The Data Backbone interfaces are all authenticated,
+but they will be used for some types of user data, so the Backbone must be
+hardened against attack (or accident) from the LSP.  Provisioning separate
+virtual machines per user in the JupyterLab Aspect helps to prevent unwanted
+sharing of information between users.  The Portal Aspect and Web APIs Aspect
+need to be hardened in the same ways as any Web-enabled service, including
+sanitizing user inputs, avoiding cross-site scripting, etc.
 
 \subsection{Additional Support Services}\label{additional-support-services}
 
