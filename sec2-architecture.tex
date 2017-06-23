@@ -50,25 +50,77 @@ users.
 
 \subsection{Data Access and Storage}\label{data-access-and-storage}
 
+Since the goal of the LSP is to retrieve and analyze LSST data products,
+data access and the storage of user data are key aspects of the platform.
 
 \subsubsection{Databases}\label{databases}
 
+Since the LSST catalog data products represent the best measurements of
+astrophysical phenomena available to the project as well as metadata
+describing how data was taken and processed, it is anticipated that
+most uses of the LSP will involve these catalogs which are stored in
+databases.
+
 \paragraph{Database content overview}\label{database-content-overview}
 
+Several types of databases will be accessible to the LSP instances:
 \begin{itemize}
-\item Image and Visit metadata
+\item Image and visit metadata
 \item Catalogs
-\item Composite data
+\item Composite data (binary data in catalogs)
 \item Observatory metadata (including EFD)
 \item Reference catalogs
 \end{itemize}
 
+Image and visit metadata includes information about the observation captured at
+the time.  It also includes information derived later from analyzing the data
+and metadata, such as an accurate mapping from pixel coordinates in an image to
+sky coordinates or an estimate of the photometric zeropoint in an image.  The
+metadata will follow the Common Archive Observation Model \citep{CAOM2} as its
+core.  This metadata will be stored in relational databases and made available
+via ADQL queries.
+
+Catalogs are described in detail in the Data Products Definition Document
+\citeds{LSE-163}.  They include summary measurements of astrophysical Objects,
+plus measurements in images from each epoch of observation and in difference
+images.  These will also be stored in relational databases and made available
+via ADQL queries.  The catalog of all Alerts that have been issued may be
+stored in a different database technology, such as a document database, and
+may thus use a different query interface.
+
+The above catalogs will include "BLOB" fields that provide large data items
+that are useful to retrieve along with other catalog data but are not
+suitable for searching.  Examples include samples of the posterior probability
+surface for a model, photometric redshift probability distribution functions,
+or "heavy footprints" giving deblended pixel values for an Object.  These
+are generally stored in separate tables within the relational database as
+they are used less frequently.
+
+The Engineering and Facility Database, which contains a record of all commands,
+configuration, and telemetry from the Observatory systems, will be transformed
+to provide simplified query access to conditions during each observation.  All
+data present in the original EFD will be available in the transformed EFD with
+the exception of Internal, Sensitive, or Highly Sensitive information, as
+defined in the Information Classification Policy \citeds{LPM-122}, which will
+not be available to users other than project staff.  The EFD does not contain
+Protected User data.  The Transformed EFD will be stored in a relational
+database, accessible via ADQL queries.
+
+Reference catalogs used in the LSST Alert, Calibration Products, and Data
+Release Productions will be provided, also in relational databases.  Additional
+catalogs, e.g. from precursor or concurrent surveys in a variety of
+wavelengths, will also be provided as relational databases depending on
+usefulness and available resources.
+
 \paragraph{Database technologies}\label{database-technologies}
 
-\begin{itemize}
-\item Conventional
-\item Qserv
-\end{itemize}
+While many of the above databases will be implemented in "conventional"
+relational database technology, the largest catalogs will require a distributed
+system to provide sufficient performance.  The LSST-developed Qserv distributed
+database will be used to implement these.  The two implementations may vary
+somewhat in their support of ADQL features.  Users creating their own catalogs
+\ref{user-catalog-data-support} will need to specify whether they are to be
+distributed, thereby selecting the appropriate back-end implementation.
 
 \subsubsection{Images}\label{images}
 
@@ -123,8 +175,11 @@ three Aspects to monitor the status of batch jobs and retrieve their results.
 \subsection{Authentication and Authorization}\label{authentication-and-authorization}
 
 Identity management and associated roles and authorizations are provided by a
-unified LSST system as described in LSE-279.  All uses of all instances of the
-LSP, including the Web APIs Aspect, are authenticated.
+unified LSST system as described in LSE-279.  This system allows the use of
+external identity providers such as the Chilean COFRe federation \citep{COFRe}
+or the US InCommon \citep{InCommon} or GitHub; those verified external
+identities are then mapped to internal LSST identities.  All uses of all
+instances of the LSP, including the Web APIs Aspect, are authenticated.
 
 \subsection{Resource Management}\label{resource-management}
 
