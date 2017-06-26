@@ -1,31 +1,96 @@
 \section{The API Aspect}\label{api-aspect}
 
+The Web APIs provide language-agnostic, location-agnostic authenticated access
+to LSST data.  They are intended to be used by client tools and automated
+processes.  They are not optimized for direct human use via a browser or
+command line URL transfer tool, although they can of course be used that way.
+The available endpoints and the URL structures they accept will be documented.
+
+The Web APIs are undergoing detailed design.  Initial prototypes exist that
+provide non-VO-compliant access to catalogs, images, image mosaics, and image
+cutouts.  This section describes the ultimate goals for the LSP Web APIs and
+documents design features where they are already known.
+
 \subsection{Overview - VO services and custom LSST services}\label{api-overview}
+
+The Web APIs support standard VO protocols where possible.  They will also
+support extensions to the VO protocols and additional custom LSST services that
+are useful for the Portal Aspect or JupyterLab Aspect.  To the extent that it
+makes sense, such extensions will be proposed to the IVOA for incorporation
+into the standard protocols.
 
 \subsection{Catalog and other tabular data access}\label{catalog-and-other-tabular-data-access}
 
+Catalogs, metadata, provenance, and other tabular data are accessed through
+the \texttt{dbserv} endpoint.
+
 \subsubsection{TAP and other VO-compliant services}\label{tap-and-other-vo-compliant-services}
+
+SCS and TAP will be supported.
 
 \paragraph{ADQL implementation}\label{adql-implementation}
 
+The ADQL implementation will support basic SQL92 (without complex subqueries)
+and region specification extensions.  Slight variations in the dialect may be
+visible between the "conventional" RDBMS back-end and the Qserv distributed
+back-end.
+
 \paragraph{Return data formats}\label{return-data-formats}
+
+Returned data formats include VOTable, compressed JSON, and SQLite.
 
 \subsubsection{Non-VO catalog interfaces}\label{non-vo-catalog-interfaces}
 
+A custom interface will provide metadata about table columns.  See section~\{table-structure}.
+
 \subsection{Image data access}\label{image-data-access}
+
+Images and other files are accessed through
+the \texttt{imgserv} endpoint.
 
 \subsubsection{Image finding}\label{image-finding}
 
+Images may be discovered via SIA data discovery or TAP query on the image metadata tables.
+
 \subsubsection{Image retrieval}\label{image-retrieval}
+
+Images may be retrieved via the URL returned in an SIA request or via SODA.
+For convenience, key/value pairs as used by the Data Butler client library may
+be provided to a custom URL interface.
 
 \subsection{Metadata access}\label{metadata-access}
 
+Catalog and image metadata can be accessed via TAP query to provided
+metadata tables.
+
 \subsubsection{Data Releases}\label{data-releases}
+
+Each Data Release has its own set of tables.  These are expected to differ in
+schema between Data Releases.  In addition, the image and catalog metadata
+available for each Data Release will vary.  Finally, identifiers within
+catalogs and images (except raw image identifiers) will vary between Data
+Releases.
+
+Accordingly, the Data Release number is a key parameter that must be
+presented to the Web APIs.  Collections of datasets that are not part of
+a Data Release (e.g. in-process, unreleased data or intermediate data
+products) are assigned labels that are used in place of the Data Release
+number.
+
+The number of Data Releases available through the LSP and therefore the Web
+APIs aspect is discussed in section~\ref{support-of-previous-releases}, 
 
 \subsubsection{Tables}\label{tables}
 
+Available tables include those in \citeds{LDM-153}.
+
 \subsubsection{Table Structure}\label{table-structure}
+
+Each table will have associated metadata that records, for each column, a
+description, UCD when appropriate, unit when appropriate, and any relationship
+with other columns (e.g. so several columns making up a covariance matrix can
+be identified as such without resorting to pattern-matching of column names).
 
 \subsection{User Workspace access}\label{user-workspace-access}
 
-(VOSpace? WebDAV?)
+WebDAV and/or VOSpace will be provided for user workspace access.
