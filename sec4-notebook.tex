@@ -4,9 +4,9 @@ The Science Platform offers in-house scientists and engineers as well as (in ope
 
 \subsection{JupyterHub / JupyterLab service}\label{jupyterhub-jupyterlab-service}
 
-The notebook service is a scalable kubernetes deployment with JupyterHub spawning individual JupyterLab individual pods for each user. The basic architecture is outlined in \figref{fig:jlarch}. JupyterLab is a rich notebook architecture that offers terminal access and dashboarding in addition to the traditional Jupyter Notebook concept, and
+The notebook service is a scalable kubernetes deployment with JupyterHub spawning individual JupyterLab pods for each user. The basic architecture is outlined in \figref{fig:jlarch}. JupyterLab is a rich notebook architecture that offers terminal access and dashboarding in addition to the traditional Jupyter Notebook concept and the use of JupyterHub allows it to be scaled to demand as infrastructure allows.
 
-A user of the JupyterLab sevice will hence be able to interact with LSST services in the same way they might have with python scripts in a shell environment. They can use our python interfaces to the DAX and the Butler for data access, the interface to the workflow system for batch processing, visualisation via bokeh, Firefly, matplotlib etc. 
+A user of the JupyterLab sevice will hence be able to interact with LSST services in the same way they might have with python scripts in a shell environment. They can use our python interfaces to the web APIs and the Butler for data access, the interface to the workflow system for batch processing, visualisation via bokeh, Firefly, matplotlib etc. 
 
 The capabilities of the service are tied to major project milestones outlined in the table below.
 
@@ -29,11 +29,11 @@ n\tabularnewline
 \end{longtable}
 \end{footnotesize}
 
-Note in particular that unlike the originally planned ``Level 3'' science user capabilities, the JL service is the primary interface of the LSST System Scientist to Commissioning. This introduces scope not required by the general science user, eg. timely access to data in the Engineering Facilities Database and the ability to rapidly deploy instances of the service on the Commissioning Cluster.
+Note in particular that in addition to the originally planned ``Level 3'' science user capabilities, the JL service is the primary interface of the LSST System Scientist to Commissioning. This introduces scope not required by the general science user, eg. timely access to data in the Engineering Facilities Database and the ability to rapidly deploy instances of the service on the Commissioning Cluster.
 
 For analyses requiring significant data processing, a process for transitioning a trial-and-error notebook into a batch job involving execution over a large dataset will be provided. 
 
-For detailed architectural discussions of the JupyterLab development work-in progress, its interfaces to other components and the current schedule for major and internal milestones see \citeds{SQR-018}. As technical choices are baselined they will transition to this document.
+For detailed architectural discussions of the JupyterLab development work-in-progress, its interfaces to other components and the current schedule for major and internal milestones see \citeds{SQR-018}. As technical choices are baselined they will transition to this document.
 
 \begin{figure}
   \includegraphics[width=\textwidth]{images/square/jupyterlab_alpha_arch}
