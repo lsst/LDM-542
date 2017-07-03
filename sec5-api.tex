@@ -1,31 +1,118 @@
 \section{The API Aspect}\label{api-aspect}
 
+The Web APIs provide language-agnostic, location-agnostic authenticated access
+to LSST data.  They are intended to be used by client tools and automated
+processes.  They are not optimized or supported for direct human use via a
+browser, although they can be used that way.  The available endpoints and the
+URL structures they accept will be documented.
+
+The Web APIs are undergoing detailed design.  Initial prototypes exist that
+provide non-VO-compliant access to catalogs, images, image mosaics, and image
+cutouts.  This section describes the ultimate goals for the LSP Web APIs and
+documents design features where they are already known.
+
 \subsection{Overview - VO services and custom LSST services}\label{api-overview}
+
+The Web APIs support standard VO protocols where possible.  They will also
+support extensions to the VO protocols and additional custom LSST services that
+are useful for the Portal Aspect or JupyterLab Aspect.  To the extent that it
+makes sense, such extensions will be proposed to the IVOA for incorporation
+into the standard protocols.
 
 \subsection{Catalog and other tabular data access}\label{catalog-and-other-tabular-data-access}
 
-\subsubsection{TAP and other VO-compliant services}\label{tap-and-other-vo-compliant-services}
+Catalogs, metadata, provenance, and other tabular data are accessed through the
+\texttt{dbserv} endpoint. For metadata and provenance, table schemas, when
+possible, will be reused from VO or community standards, such as CAOM2
+\citep{CAOM2} and others.
 
-\paragraph{ADQL implementation}\label{adql-implementation}
+\subsubsection{TAP service}\label{tap-and-other-vo-compliant-services}
 
-\paragraph{Return data formats}\label{return-data-formats}
+\texttt{dbserv} is the LSST implementation of IVOA's TAP interface.
+\texttt{dbserv} will target compliance with TAP 1.1 once it is recommended
+by the IVOA.
 
-\subsubsection{Non-VO catalog interfaces}\label{non-vo-catalog-interfaces}
+\subsubsection{ADQL implementation}\label{adql-implementation}
+
+Internal to dbserv is an ADQL parser. This parser will target compliance with
+ADQL 2.1 once it reaches recommended status.  In addition to that, SQL language
+features of underlying databases will be made available, when possible.  Some
+capabilities will be restricted if a database does not support them, such as
+subqueries which do not perform well in a distributed database system.
+
+\subsubsection{Return data formats}\label{return-data-formats}
+
+As \texttt{dbserv} will be TAP compliant, it will support the VOTable output
+specified by TAP 1.1, which should be version 1.3. Additional encoding
+protocols for VOTable output will be supported, including JSON and SQLite
+output, which were chosen for the ability to represent metadata in-line with
+VOTable data. For all output formats, gzip compression through the HTTP
+protocol will be supported and encouraged.
 
 \subsection{Image data access}\label{image-data-access}
 
+Image discovery, metadata, and data retrieval will be available through
+the \texttt{imgserv} endpoint.
+
 \subsubsection{Image finding}\label{image-finding}
+
+Image discovery will be facilitated through an implementation of the IVOA SIA
+V2 interface. Simple implementations of SIA allow direct access to files
+available via HTTP by adding a link to the SIA response; \texttt{imgserv} will
+use that attribute in the SIA response to link to another service. Image
+metadata will also be facilitated through TAP, as image metadata will be
+available according in the database through implementations of the IVOA ObsCore
+Data Model \citep{ObsCore} and the CAOM2 data model, as well as LSST-native
+image metadata representations.
 
 \subsubsection{Image retrieval}\label{image-retrieval}
 
+Images may be retrieved via the URL returned in an SIA request, in the case
+images can be directly served over HTTP, or via a SODA implementation. The LSST
+SODA implementation will also offer enhancements to implement project-specific
+goals without presenting additional interfaces to science users. For example,
+key/value pairs as used by the Data Butler client may be provided. 
+
 \subsection{Metadata access}\label{metadata-access}
+
+Catalog and image metadata can be accessed via TAP query to provided
+metadata tables.
 
 \subsubsection{Data Releases}\label{data-releases}
 
+Each Data Release has its own set of tables.  These are expected to differ in
+schema between Data Releases.  In addition, the image and catalog metadata
+available for each Data Release will vary.  Finally, identifiers within
+catalogs and images (except raw image identifiers) will vary between Data
+Releases.
+
+Accordingly, the Data Release number is a key parameter that must be
+presented to the Web APIs.  Collections of datasets that are not part of
+a Data Release (e.g. in-process, unreleased data or intermediate data
+products) are assigned labels that are used in place of the Data Release
+number.
+
+The number of Data Releases available through the LSP and therefore the Web
+APIs aspect is discussed in section~\ref{support-of-previous-releases}, 
+
 \subsubsection{Tables}\label{tables}
+
+Available tables include those in \citeds{LDM-153}.
+
+Catalog and image metadata tables will be implemented through IVOA and
+community standards, when possible, such as those laid out by IVOA's ObsCore
+DM, VOResource/RegTap, and the CAOM2 data model. Even if direct usage of those
+models is not feasible, a best-effort export to them will be performed.  In
+such a case, the "native" metadta tables will be documented for direct access
+by users through TAP.
 
 \subsubsection{Table Structure}\label{table-structure}
 
+Each table will have associated metadata that records, for each column, a
+description, UCD when appropriate, unit when appropriate, and any relationship
+with other columns (e.g. so several columns making up a covariance matrix can
+be identified as such without resorting to pattern-matching of column names).
+
 \subsection{User Workspace access}\label{user-workspace-access}
 
-(VOSpace? WebDAV?)
+WebDAV and/or VOSpace will be provided for user workspace access.
