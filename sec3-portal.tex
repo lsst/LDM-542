@@ -77,6 +77,12 @@ In addition, all queries on LSST or LSST-hosted performed by the Portal through 
 This capability, further discussed below, is the key to enabling seamless scientific workflows that cross the Aspects.
 It will also be possible for a user to browse their query history and select individual queries for re-execution or for download of the previous results (if they are still in the results cache).
 
+The generic data browsing capabilities of the Portal will also be available for selected non-LSST reference catalogs that will be hosted at the LSST Data Access Centers, for purposes of calibration, data quality analysis or user convenience.
+The semantic knowledge of the LSST data that the Portal is planned to exploit may be more limited for these hosted external datasets, but all the basic functions of the Portal will still be available.
+In addition, the Portal will be able to access any publicly available dataset that has a VO-standard interface, particularly a TAP/ADQL interface.
+Semantic features of the interface will be enhanced when external data (hosted or remotely accessed) are organized according to the CAOM model (in the case of observational metadata) and when queries return well-curated UCDs.
+Query results will be capable of being saved to the user workspace.
+
 \subsection{Documentation Delivery}\label{documentation-delivery}
 
 A key function of the Portal is to connect the user to documentation on the Portal itself, the Science Platform more generally, the data structure and quality, the data processing, the survey, and the LSST itself.
@@ -120,6 +126,8 @@ The deployment and maintenance manual will provide the information required to m
 It is intended primarily to be useful to the project's operations staff, but it will also be aimed at providing information useful to those who may wish to set up additional instances of the Science Platform outside the project.
 
 \subsection{Semantics-aware Workflows}\label{semantics-aware-workflows}
+
+In addition to the generic data exploration 
 
 \subsection{Use of the LSST Stack}\label{use-of-the-lsst-stack}
 
