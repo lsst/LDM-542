@@ -23,7 +23,7 @@ How much broad summary information may be provided to unauthenticated users thro
 Since all users will be authenticated, the Portal will be able to provide identity-based persistent state that allows users to start their work in one browser and then continue it elsewhere.
 How much user state will be identity-based and how much will be session-based is still being considered and will be adjusted in response to user feedback.
 
-The Portal Aspect also provides convenient access to external data relevant to the understanding and exploitation of the LSST data products: 
+The Portal Aspect also provides convenient access to external data relevant to the understanding and exploitation of the LSST data products:
 to reference catalogs maintained on LSST systems,
 to a selection of specific publicly available data archives,
 and to any data archives available through standard VO services.
@@ -34,7 +34,7 @@ A key requirement on the Portal is that it provides for discovery of all the LSS
 By relying on the creation of extensive metadata on the structure of the data products in the Science Pipelines code and other data sources, and on its delivery via the deployment of the data for release through the API Aspect and the underlying databases and services, the Portal is able to provide content-sensitive documentation, query, exploration, and visualization of every released table.
 
 Driven by the metadata available through the API aspect, the Portal will be able to display to the user the available data releases, and all the tables available in each release and in Level~1.
-The Portal will allow the user to select the the data product to search on, provide a search form for the selected data product, generate the search request based on user's input, submit the search and display the results. 
+The Portal will allow the user to select the the data product to search on, provide a search form for the selected data product, generate the search request based on user's input, submit the search and display the results.
 If sufficient metadata are available, a detailed search form will be constructed that allows the user to specify constraints on any column without having to know how to write an ADQL query.
 The search form will also always provide a means for the user to specify an ADQL query directly.
 In either case, the Portal will then pass the ADQL along to the API Aspect to do the search.
@@ -54,7 +54,7 @@ It will provide for the creation of scatter (or line) charts for any selection o
 The Portal will also have the ability to create histograms on demand for columnar data or expressions on columnar data.
 
 If the selected data product is image data (i.e., if the search was on an image metadata table), the Portal will be able to use the associated metadata to construct queries for the images themselves and display them to the user.
-A variety of functions will be available to adjust and interact with the image displays: stretch, color change, zoom, rotate, flip, crop, measure distance between two points, overlay a variety of coordinate grids, add markers, upload DS9-style ``region files'', plot the telescope field of view, etc. 
+A variety of functions will be available to adjust and interact with the image displays: stretch, color change, zoom, rotate, flip, crop, measure distance between two points, overlay a variety of coordinate grids, add markers, upload DS9-style ``region files'', plot the telescope field of view, etc.
 
 Tables of catalog data containing IDs linking to the images on which the measurements were made can be used in the same way to drive browsing over image displays.
 
@@ -98,7 +98,7 @@ Much of this documentation will be created by other parts of the project, but th
 
 The Portal will provide online documentation in a variety of ways: implicitly through the naming and labeling of UI elements and screens, via ``tool tips'', and via dedicated ``Help'' buttons or icons.
 
-UI elements such as the label and title for a window, an input form, an input field, a column in a result display, a function name, etc. are the first points of entry for users to understand and interact with the LSST data. 
+UI elements such as the label and title for a window, an input form, an input field, a column in a result display, a function name, etc. are the first points of entry for users to understand and interact with the LSST data.
 Such labels and titles have to be well thought out, as precise and unambiguous as possible, but also human-readable.
 This may mean that many entities may need to have both an ``internal'' name, such as the true name of a table in a database, and a ``common name'' that facilitates human understanding and speech about the entity.
 In such cases, if the common name is displayed by default in the UI, the UI must allow the user to discover \emph{and copy and paste} the true name so that it can be used in contexts, such as typing ADQL queries, where it is required.
@@ -111,7 +111,7 @@ In addition, the availability of metadata such as units and IVOA UCDs will permi
 
 The final category of context-dependent online documentation will be associated with explicit ``Help'' icons in various places in the interface.
 These will take the user to detailed documentation in another window, with a strong preference for ``deep-linking'' that takes the user first to the most relevant point in a document.
-It is by this means that we expect to provide access to the larger world of documentation on the data processing, data quality reports, and documentation on the survey and the Observatory itself. 
+It is by this means that we expect to provide access to the larger world of documentation on the data processing, data quality reports, and documentation on the survey and the Observatory itself.
 
 \subsubsection{User Guide}\label{user-guide}
 
@@ -215,7 +215,7 @@ Standard Scientific visualizations are generated in the Client via the Plotly li
 The Server tier manages searches, the Firefly shared data model that enables data linkages across visualizations, and provides the interface to other supporting services such as authentication providers.
 The Server tier provides an abstraction layer for creating ``search processors'' usable from the Client.
 These are plugin interfaces to a variety of data sources, providing support both for executing queries via standard external protocols such as IVOA TAP and for working with data services with custom protocols.
-The Server handles search requests, dispatches them to the proper data service, obtains the results, 
+The Server handles search requests, dispatches them to the proper data service, obtains the results,
 and prepares them for rendering and display.
 The Server also provides exploratory data analysis features that can be applied to the data it has received.
 

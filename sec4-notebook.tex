@@ -6,9 +6,9 @@ The Science Platform offers in-house scientists and engineers as well as (in ope
 
 The notebook service is a scalable kubernetes deployment with JupyterHub spawning individual JupyterLab pods for each user. The basic architecture is outlined in \figref{fig:jlarch}. JupyterLab is a rich notebook architecture that offers terminal access and dashboarding in addition to the traditional Jupyter Notebook concept and the use of JupyterHub allows it to be scaled to demand as infrastructure allows.
 
-A user of the JupyterLab sevice will hence be able to interact with LSST services in the same way they might have with python scripts in a shell environment. They can use our python interfaces to the web APIs and the Butler for data access, the interface to the workflow system for batch processing, visualisation via bokeh, Firefly, matplotlib etc. 
+A user of the JupyterLab sevice will hence be able to interact with LSST services in the same way they might have with python scripts in a shell environment. They can use our python interfaces to the web APIs and the Butler for data access, the interface to the workflow system for batch processing, visualisation via bokeh, Firefly, matplotlib etc.
 
-The capabilities of the service are tied to major project milestones outlined in the table below in a series of phased releases.  Each release is primarily targeted at a different audience -  see \secref{application-of-the-science-platform-inside-the-project} for a summary of how the capabilities of the Science Platform as a whole are going to be used by teams inside the project. 
+The capabilities of the service are tied to major project milestones outlined in the table below in a series of phased releases.  Each release is primarily targeted at a different audience -  see \secref{application-of-the-science-platform-inside-the-project} for a summary of how the capabilities of the Science Platform as a whole are going to be used by teams inside the project.
 
 \begin{footnotesize}
 % \begin{longtable}[c]{|l|l|p{0.4\textwidth}|l|}
@@ -31,7 +31,7 @@ n\tabularnewline
 
 Note in particular that in addition to the originally planned ``Level 3'' science user capabilities, the JL service is the primary interface of the LSST System Scientist to Commissioning. This introduces scope not required by the general science user, eg. timely access to data in the Engineering Facilities Database and the ability to rapidly deploy instances of the service on the Commissioning Cluster.
 
-For analyses requiring significant data processing, a process for transitioning a trial-and-error notebook into a batch job involving execution over a large dataset will be provided. 
+For analyses requiring significant data processing, a process for transitioning a trial-and-error notebook into a batch job involving execution over a large dataset will be provided.
 
 For detailed architectural discussions of the JupyterLab development work-in-progress, its interfaces to other components and the current schedule for major and internal milestones see \citeds{SQR-018}. As technical choices are baselined they will transition to this document.
 
@@ -43,7 +43,7 @@ For detailed architectural discussions of the JupyterLab development work-in-pro
 
 \subsection{Pre-installed LSST software}\label{pre-installed-lsst-software}
 
-An important advantage of the JupyterLab environment is that it is already set up and optimised for running a variety of LSST data. We achieve this by building containers directly from the weekly releases created by our continuous integration system and then deploying them to JupyterHub which asks the user which version to use to spawn their pod. This means the users always have a choice of cadence (latest weekly or last stable) in their environment depending on their risk tolerance versus appetite for the latest feature. We plan to make other complementary third-party astronomical packages (eg. sextractor) available too. 
+An important advantage of the JupyterLab environment is that it is already set up and optimised for running a variety of LSST data. We achieve this by building containers directly from the weekly releases created by our continuous integration system and then deploying them to JupyterHub which asks the user which version to use to spawn their pod. This means the users always have a choice of cadence (latest weekly or last stable) in their environment depending on their risk tolerance versus appetite for the latest feature. We plan to make other complementary third-party astronomical packages (eg. sextractor) available too.
 
 \subsection{Pre-configured access to LSST data}\label{pre-configured-access-to-lsst-data}
 
