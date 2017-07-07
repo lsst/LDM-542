@@ -197,36 +197,55 @@ For example, in the Prototype Data Access Center the capability has already been
 
 \subsection{Implementation}
 
-\subsubsection{Firefly}
+% \subsubsection{Firefly}
 
-The planned implementation of the Portal Aspect is based on an evolution of the Firefly toolkit originally developed at Caltech/IPAC for the NASA IRSA archive and the Spitzer Heritage Archive.
-Firefly is a framework for the development of Web-based client-server applications for accessing astronomical archives.
+The planned implementation of the Portal Aspect is based on an evolution of Firefly, originally developed at Caltech/IPAC for the NASA Spitzer Heritage Archive and the IRSA archives.
+Firefly is a framework and a set of libraries for the development of Web-based client-server applications for accessing astronomical archives.
 It comes with a native set of capabilities: basic data-search functions, astronomical image visualization, and sophisticated tabular data visualization capabilities including a shared data model that permits the delivery of brushing-and-linking functionality across tabular, chart, and image displays.
+Firefly also provides a set of JavaScript, Web, and Python APIs, allowing the construction of customized Web applications, but also allowing users to access the visualization components in their own simple web pages (or Jupyter notebooks) without having to build a complete web application.
 
-Firefly provides a set of JavaScript, Web, and Python APIs, allowing the construction of customized Web applications, but also allowing users to access the visualization components in their own simple web pages (or Jupyter notebooks) without having to build a complete web application.
+Many Firefly-based applications are in operations in IRSA-operated archives, such as the Spitzer Heritage Archive, the WISE Image Service, the Planck US Data Center visualization service, PTF Image Service, and the new IRSA Finder Chart application.
 
-Many Firefly-based applications are in operations in IRSA-operated archives, such as the Spitzer Heritage Archive, the WISE Image Service, visualizations for the Planck US Data Center, PTF Image Service, and the new IRSA Finder Chart application.
-
-Conceptually, Firefly-based applications are organized into three tiers: Client, Server, and Data.
+Conceptually, Firefly-based applications are organized into three tiers: Client, Server, and Data Services.
 The Client tier is responsible for rendering the display of the data and providing the UI.
-The Client is a native Javascript app based on the React framework.
-Standard scientific visualizations are generated in the Client via the Plotly libraries, while astronomical image visualizations are handled in a Google Maps-like way with elements of the rendering performed on the Server.
+The Client is a native Javascript application based on the React framework.
+The Javascript APIs of the components of the application allow for the straightforward construction of a wide variety of portal UIs combining images, tables, and plots of the tabular data.
+Standard Scientific visualizations are generated in the Client via the Plotly libraries, while astronomical image visualizations are handled in a Google Maps-like way with tiled rendering performed on the Server.
 
-The Server tier provides an abstraction layer for creating search processors manages the search requests, dispatches the request to proper data service, gets the results, processes and prepares the results for rendering.
+The Server tier manages searches, the Firefly shared data model that enables data linkages across visualizations, and provides the interface to other supporting services such as authentication providers.
+The Server tier provides an abstraction layer for creating ``search processors'' usable from the Client.
+These are plugin interfaces to a variety of data sources, providing support both for executing queries via standard external protocols such as IVOA TAP and for working with data services with custom protocols.
+The Server handles search requests, dispatches them to the proper data service, obtains the results, 
+and prepares them for rendering and display.
+The Server also provides exploratory data analysis features that can be applied to the data it has received.
 
-Data tier does the data search by accessing the database, user workspace directly, or invoke web services to get the results from other service providers.
+The core of the Server is a Java application, hosted on a Tomcat server.
+Communication between the Client and Server tiers is through a combination of standard HTTPS requests and a WebSocket interface.
+The Server tier provides the Web APIs --- and wrapper Python APIs for them --- that enable driving and querying the server state from other system components or by users.
 
+The Server tier includes the ability to extend the capabilities of Firefly through microservices.
+This facility will be used in the Portal Aspect to provide visualizations for LSST-specific ``blob'' data products for which the DM stack code will be used to convert the data product into an artifact suitable for display.
 
-As part of the LSST project, Firefly will be extended with more sophisticated metadata models enabling the the implementation of the advanced generic-browsing behavior described above,
+Finally, the Data Services tier actually performs searches and other data retrievals, and is generally composed of components provided by the underlying data archives.
+In the case of the Portal Aspect's Firefly application, the Data Services tier essentially comprises the data access services provided by the API Aspect.
 
-Design guidelines
-- efficient use of space
-- all entities and data usefully copy/pasteable
-- consistency of layout and of interpretation of OK/Apply/Cancel/Dismiss and modal/modeless semantics for dialogs
+As part of the LSST project, Firefly will be extended with more sophisticated metadata models enabling the the implementation of the advanced generic-browsing behavior described above, support for all-sky visualizations based on HEALPix and the HiPS file format, and with the ability for users, via the Firefly APIs, to call on advanced visualizations provided by the Plotly library, beyond those used for Firefly's native functions.
 
-\subsection{Portal Architecture}
+In addition, in developing the Portal, the SUIT team is reviewing the existing heritage of UI elements provided by Firefly and revising the appearance and workflows to take advantage of contemporary developments in user experience design, and to provide a uniform experience across the tool.
 
-The basic functional architecture of the Portal Aspect is shown in Figure XXX.
+Key design guidelines in this process are:
+\begin{itemize}
+\item the efficient use of display space, with as many pixels as possible devoted to rendering data in preference to static UI elements;
+\item in data-viewing screens, a corresponding preference for more context-sensitive ``pop-up'' UI elements versus static buttons;
+\item consistency of presentation of common entities (e.g., sky coordinates) across the Portal, with an emphasis on the ease of selecting an entity in one place in the UI and using it (e.g., by copy and paste) in another without editing;
+\item consistency of layout and of the behavior of UI elements, including issues like the use of modal versus modeless dialogs and inspectors, and the positioning and meaning of controls such as ``OK'', ``Apply'', ``Cancel'', and ``Dismiss''.
+\end{itemize}
 
-\subsection{Interface to the Alert Mini-Broker}
+\subsection{Interface to the Alert Distribution and Filtering Services}
 
+Beyond providing the archive-access functionality described above, the Portal Aspect has the additional role of providing data-rights holders a simple UI for access to the alert distribution and filtering facilities provided by the Project.
+This is essentially a ``mini-broker''; unlike the envisioned community alert brokers, the LSST-specific facilties will have access only to the information in the LSST alert messages themselves.
+The UI will allow users to establish and control subscriptions to the alert stream, and to select from a modest set of pre-defined filters, or submit simple user-defined filters, to be applied to the alert stream they receive.
+
+The Portal UI for this will be closely tied with screens for the querying of the alert database and the visualization of its contents, to provide convenient workflows for users interested in the time-domain LSST data.
+We anticipate being able to provide data access workflows that enable users to tie the information actually present in alerts to additional data, though context-sensitive searches and the like.
