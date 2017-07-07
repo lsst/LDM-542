@@ -138,10 +138,11 @@ Examples of Portal features in this category may include:
 \begin{itemize}
 \item In cases where the scientific information of the information in one table requires a more complex query involving, for example, calibration information from another table (e.g., the subtraction of photometric zero-points), the Portal will provide UI support for the single-click application of that calibration to queries generated from the standard screens.
 It will then also provide contextual help explaining what has been done, so that the user can learn the underlying query language that is required and then be able to perform similar queries, e.g., in the Notebook aspect, without the UI support.
+\item UI guidance for the interpretation of parent-child relationships between entities related by deblending algorithms.
 \item Property sheet screens for the most important tables (e.g., Visit, Object) that organize and present the data in more user-friendly ways that depend on expert knowledge of, e.g., what the most scientifically interesting and most commonly used attributes are, or which attributes may be the most likely to be of interest to see close to each other on the screen, or that provide explanatory text or visual guidance beyond what can be readily represented by the metadata and general contextual help system.
 \item Customized UI actions available in property sheets or the table viewer for key tables, providing a greater richness and/or user-friendliness of follow-on searches.
-For example, we expect to provide a simple "Display light curve" UI action on the property sheet for an Object or a DIAObject.
-In contrast, in a generic-browsing version of the Object property sheet, the same functionality might be met by a "Search related tables" UI element that would let the user pick the "ForcedSource" table from a list of tables with foreign-key columns pointing back to Object, and then pick the appropriate flux column from the ForcedSource table.
+For example, we expect to provide a simple ``Display light curve'' UI action on the property sheet for an Object or a DIAObject.
+In contrast, in a generic-browsing version of the Object property sheet, the same functionality might be met by a ``Search related tables'' UI element that would let the user pick the ``ForcedSource'' table from a list of tables with foreign-key columns pointing back to Object, and then pick the appropriate flux column from the ForcedSource table.
 In cases where such simplified functionality is provided, the contextual help system will be used to ensure that the user understands what the actual search performed is, including the ability to review the ADQL used, so that the user can then decide to customize the search differently from the default.
 \item Prioritization of columns in tabular data displays for the most important tables, making --- in the absence of user requests to the contrary --- a consciously designed subset of the columns in these tables more easily accessed in the table viewer, in a column picker, etc.
 \item Custom designs of mouse-over inspectors for data points in plots generated from key tables.
@@ -152,7 +153,25 @@ For example, for photometric Object data where the actual database table contain
 
 The successive versions of the Prototype Data Access Center deployments of the Portal, and the use of the Portal during commissioning, will be used to gather experience and user recommendations to guide the development of the most useful such customizations as the operations era approaches.
 
+The Portal will be designed to facilitate the continued development of additional customizations during the operations era, as user experience accumulates.
+
 \subsection{Use of the LSST Stack}\label{use-of-the-lsst-stack}
+
+The basic functionality of the Portal Aspect is based on the external persisted forms of the LSST data provided through the API Aspect's Web interfaces, which return ``on the wire'' data in community standard forms such as FITS image and table files and VOTable.
+In many cases the Portal implementation is able to work directly with these persisted forms, without dependencies on the LSST pipeline code base in order to interpret them.
+However, among the LSST data products there are also ones for which there are no semantically meaningful community standard forms, and for the interpretation of which the use of the LSST code is very useful, if not indispensable.\footnote{``Not indispensable'' because ultimately all the persisted data object forms require complete documentation, of a quality and depth which would permit the independent development of code to interpret them.  However, in some cases, due to the complexity of the data model, we anticipate that such a reimplementation would be costly to develop.}
+Likely examples of such data objects are source footprints and ``heavy footprints'' (bit maps and pixel flux data, respectively, for single sources and groups of sources), and image PSF models.
+
+In order to offer visualizations of these data products, the Portal Aspect will invoke LSST stack code to transform them into useful visual forms such as image overlays, plots of PSF variation, and the like.
+The Portal Aspect will only attempt to provide a limited set of such standard visualizations, recognizing that the Notebook's Python environment and the range of visualization toolkits that will be available there will enable the user community to develop a rich set of specialized tools for these purposes.
+
+Note that even in cases where there are LSST data products for which no dedicated visualization is provided, the Portal Aspect will still provide the ability to inspect the data object contents.
+For example, for data products represented by complex FITS table models, the tables themselves will be viewable even if the Portal does not directly provide a semantic interpretation of the data product they represent.
+
+The extent to which this will be required is still being determined, because the full persisted data model for the LSST data products has not yet been specified.
+As above, development will prioritize the development of visualizations for the most commonly used or otherwise important data products.
+
+\subsection{API Interaction with the Portal}
 
 \subsection{Extensibility of Visualizations}\label{extensibility-of-visualizations}
 
@@ -168,4 +187,6 @@ Design guidelines
 - efficient use of space
 - all entities and data usefully copy/pasteable
 - consistency of layout and of interpretation of OK/Apply/Cancel/Dismiss and modal/modeless semantics for dialogs
+
+\subsection{Interface to the Alert Mini-Broker}
 
