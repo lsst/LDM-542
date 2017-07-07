@@ -72,10 +72,16 @@ Similarly, a column-based selection in the table will be reflected in the diagra
 
 All query results --- tables and images --- will be available for download in either their original or interactively modified forms.
 Data may be downloaded either to the user's remote system (i.e., the system running the browser) or to the user's Science Platform workspace.
+The Portal Aspect will also support the creation of user databases based on tabular query results.
 
 In addition, all queries on LSST or LSST-hosted performed by the Portal through the API Aspect will be associated with the user and will be readily retrievable through the Notebook Aspect or directly through the API Aspect.
 This capability, further discussed below, is the key to enabling seamless scientific workflows that cross the Aspects.
 It will also be possible for a user to browse their query history and select individual queries for re-execution or for download of the previous results (if they are still in the results cache).
+
+The Portal Aspect will provide for access to user data, both in the Science Platform's user workspace (which accommodates file-oriented data) and in user-created databases.
+It will provide a traditional hierarchy-browser capability for the workspace, with the ability to inspect and visualize the contents of image or data table files of recognized types (e.g., FITS, VOTable, CSV).
+The workspace browser will also provide basic management functions for the organization of the workspace hierarchy, renaming and deletion of files, and the like.
+The Portal Aspect will provide for discovery, query, and visualization of user databases using the same generic data browsing tools as for the LSST data, though the sophistication of this interface will depend on the availability of adequate metadata for the user databases.
 
 The generic data browsing capabilities of the Portal will also be available for selected non-LSST reference catalogs that will be hosted at the LSST Data Access Centers, for purposes of calibration, data quality analysis or user convenience.
 The semantic knowledge of the LSST data that the Portal is planned to exploit may be more limited for these hosted external datasets, but all the basic functions of the Portal will still be available.
@@ -171,22 +177,56 @@ For example, for data products represented by complex FITS table models, the tab
 The extent to which this will be required is still being determined, because the full persisted data model for the LSST data products has not yet been specified.
 As above, development will prioritize the development of visualizations for the most commonly used or otherwise important data products.
 
-\subsection{API Interaction with the Portal}
+\subsection{API Interaction with the Portal}\label{api-interaction-portal}
+
+The Portal Aspect will provide APIs for interacting with its capabilities and with user sessions.
+It will be possible for a user to programmatically upload image and tabular data and open a visualization in a current Portal session --- again, with the sophistication of the results dependent on the provision of metadata.
+It will also be possible to programmatically query the state of a session, in support of users' ability to begin a workflow in the Portal and then continue it programmatically outside the Portal Aspect -- most notably, inside the Notebook Aspect.
 
 \subsection{Extensibility of Visualizations}\label{extensibility-of-visualizations}
 
+The Portal software infrastructure is being developed to permit users to create visualizations not in the basic Portal software release.
+The Portal relies on the open-source scientific graphics library Plotly for the generation of a variety of types of plots.
+Plotly provides well-documented APIs and data structures for the creation of a wide variety of scientific and other graphics.
+While only a few of these will be used in the standard Portal configuration, the Portal will be designed to permit the use of the underlying interfaces to add custom plots under user control.
+
 \subsection{Extensibility of the UI}\label{extensibility-of-the-ui}
 
-The Portal Aspect's UI is extensible with additional computation and visualization tools developed by users and collaborations.
-
-\subsection{Portal Architecture}
+The Portal Aspect's UI will be extensible with custom actions associated with data types and selections.
+For example, in the Prototype Data Access Center the capability has already been demonstrated of creating a button in the image-viewing UI that allows the connection of a selected region on an image to user code that performs an action based on that selection.
 
 \subsection{Implementation}
+
+\subsubsection{Firefly}
+
+The planned implementation of the Portal Aspect is based on an evolution of the Firefly toolkit originally developed at Caltech/IPAC for the NASA IRSA archive and the Spitzer Heritage Archive.
+Firefly is a framework for the development of Web-based client-server applications for accessing astronomical archives.
+It comes with a native set of capabilities: basic data-search functions, astronomical image visualization, and sophisticated tabular data visualization capabilities including a shared data model that permits the delivery of brushing-and-linking functionality across tabular, chart, and image displays.
+
+Firefly provides a set of JavaScript, Web, and Python APIs, allowing the construction of customized Web applications, but also allowing users to access the visualization components in their own simple web pages (or Jupyter notebooks) without having to build a complete web application.
+
+Many Firefly-based applications are in operations in IRSA-operated archives, such as the Spitzer Heritage Archive, the WISE Image Service, visualizations for the Planck US Data Center, PTF Image Service, and the new IRSA Finder Chart application.
+
+Conceptually, Firefly-based applications are organized into three tiers: Client, Server, and Data.
+The Client tier is responsible for rendering the display of the data and providing the UI.
+The Client is a native Javascript app based on the React framework.
+Standard scientific visualizations are generated in the Client via the Plotly libraries, while astronomical image visualizations are handled in a Google Maps-like way with elements of the rendering performed on the Server.
+
+The Server tier provides an abstraction layer for creating search processors manages the search requests, dispatches the request to proper data service, gets the results, processes and prepares the results for rendering.
+
+Data tier does the data search by accessing the database, user workspace directly, or invoke web services to get the results from other service providers.
+
+
+As part of the LSST project, Firefly will be extended with more sophisticated metadata models enabling the the implementation of the advanced generic-browsing behavior described above,
 
 Design guidelines
 - efficient use of space
 - all entities and data usefully copy/pasteable
 - consistency of layout and of interpretation of OK/Apply/Cancel/Dismiss and modal/modeless semantics for dialogs
+
+\subsection{Portal Architecture}
+
+The basic functional architecture of the Portal Aspect is shown in Figure XXX.
 
 \subsection{Interface to the Alert Mini-Broker}
 
