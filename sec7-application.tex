@@ -1,33 +1,19 @@
 \section{Application of the Science Platform inside the Project}\label{application-of-the-science-platform-inside-the-project}
 
-The LSP is not only for use by scientist end users through the Data Access
-Centers.  The Platform will be used extensively within the LSST project as well
-for a number of purposes.
+The Science Platform is not only for use by scientist end users through the Data Access Centers but it also forms an integral part of the toolchain within the Project. A phased release of capabilities focuses on the needs of the primary target audience for each major version. This approach allows us to deliver features of the platform to project staff to assist them in contruction work while also providing an early user base whose feedback will allow us to refine our design. 
 
-\subsection{Developer Support}\label{developer-support}
+\subsection{Data Management Teams}\label{developer-support}
 
-Developers will use the LSP to visualize and analyze the results of code tests,
-including both periodic and ad hoc runs using both simulated and real data.
-The Integration environment LSP instance will be used to verify and validate
-new features and updates to the LSP code, deployment, services, and processes.
+The earliest releases of the Science Platform are aimed at Data Management teams. The capabilities supporting software development include interactively troubleshooting code and analysing metrics through the Notebook Aspect. The capabilities supporting algorithmic development include visualising the results of large processing runs of precursor and simulated data through the Portal Aspect. 
 
-\subsection{Commissioning}\label{commissioning}
+\subsection{Commissioning Team}\label{commissioning}
 
-The Commissioning Team will use the Commissioning Cluster instance of the LSP
-to rapidly visualize and analyze images taken for system verification and
-validation purposes; to analyze the results of experiments with hardware,
-firmware, and software configuration modifications; and to prototype quality
-control data products and checks to be incorporated into automated systems.
-The Commissioning Cluster instance has direct access to the live Engineering
-and Facilities Database, so it can be used to correlate image and image
-quality measurement behavior with trends in telemetry.
+Intermediate releases of the Science Platform are aimed at the commissioning team. The capabilities supporting commissioning include the interfaces needed to allow Notebooks to cross-correlate early ComCam data with telemetry captured in the Engineering and Facilities Database and a deployment of the Science Platform on the Commissioning Cluster.
+
+\subsection{Science Validation Team} 
+
+Mature releases of the Science Platform are aimed at the Science Validation Team which is expected to involve a mixture of Project and Science Collaboration members. Science Validation requires many of the features of the operational Science Platform since it involves detailed interactive data analysis and generating and visualising statistics from large data runs.
 
 \subsection{Observatory Operations}\label{observatory-operations}
 
-The LSST Data Facility and Science Operations staff will use the Science
-Validation LSP instance to visualize and analyze the data products from the
-Alert, Calibration Products, and Data Release Productions to ensure that they
-meet science needs.  The Observatory Operations staff will use the
-Commissioning Cluster LSP instance to monitor the status of the Observatory
-systems and reverify and revalidate the system after modifications or
-maintenance.
+In the Operations era, all of the above workflows will continue to be in heavy use by Observatory staff: software support will continue to characterise releases using the notebooks and reporting tools developed in Construction; facility checkout after engineering periods at the telescope will re-use many of the processes developed in commissioning; and facility scientists and calibration specialists will use workflows similar to those developed during science validation to enhance the understanding of the instrument. This will ensure that all Science Platform Aspects made available to the community remain vigorous and relevant.

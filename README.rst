@@ -27,7 +27,7 @@ The document is built using LaTeX, and relies upon the `lsst-texmf <https://lsst
 It includes the necessary versions of these as git submodules.
 To build from scratch::
 
-  git clone https://github.com/lsst/LDM-148
+  git clone https://github.com/lsst/LDM-542
   cd LDM-542
   git submodule init
   git submodule update
