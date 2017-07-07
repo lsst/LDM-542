@@ -125,9 +125,32 @@ The reference manual will include API documentation for both the client and serv
 The deployment and maintenance manual will provide the information required to maintain the operation of the Portal in the context of the LSST infrastructure, including information on how to run and configure its components, and how to ensure that they are able to communicate successfully with the rest of the Science Platform components and infrastructure.
 It is intended primarily to be useful to the project's operations staff, but it will also be aimed at providing information useful to those who may wish to set up additional instances of the Science Platform outside the project.
 
-\subsection{Semantics-aware Workflows}\label{semantics-aware-workflows}
+\subsection{Customized Workflows}\label{customized-workflows}
 
-In addition to the generic data exploration 
+In addition to the metadata-driven generic data exploration capability, the Portal Aspect will provide dedicated workflows aimed at improving the user experience for access to a small number of the most commonly accessed LSST data products.
+
+This involves some extra effort to design the specific screens, UI actions, and connections from one to another.
+It involves a tradeoff between the improvement in user experience and a potentially increased exposure to the need to modify these elements of the Portal to account for changes in the structure of the data, e.g., from one data release to the next.
+It can also be seen as a tradeoff between providing certain functionality directly versus extending the capabilities and generality of the metadata system to unjustifiable levels.
+
+Examples of Portal features in this category may include:
+
+\begin{itemize}
+\item In cases where the scientific information of the information in one table requires a more complex query involving, for example, calibration information from another table (e.g., the subtraction of photometric zero-points), the Portal will provide UI support for the single-click application of that calibration to queries generated from the standard screens.
+It will then also provide contextual help explaining what has been done, so that the user can learn the underlying query language that is required and then be able to perform similar queries, e.g., in the Notebook aspect, without the UI support.
+\item Property sheet screens for the most important tables (e.g., Visit, Object) that organize and present the data in more user-friendly ways that depend on expert knowledge of, e.g., what the most scientifically interesting and most commonly used attributes are, or which attributes may be the most likely to be of interest to see close to each other on the screen, or that provide explanatory text or visual guidance beyond what can be readily represented by the metadata and general contextual help system.
+\item Customized UI actions available in property sheets or the table viewer for key tables, providing a greater richness and/or user-friendliness of follow-on searches.
+For example, we expect to provide a simple "Display light curve" UI action on the property sheet for an Object or a DIAObject.
+In contrast, in a generic-browsing version of the Object property sheet, the same functionality might be met by a "Search related tables" UI element that would let the user pick the "ForcedSource" table from a list of tables with foreign-key columns pointing back to Object, and then pick the appropriate flux column from the ForcedSource table.
+In cases where such simplified functionality is provided, the contextual help system will be used to ensure that the user understands what the actual search performed is, including the ability to review the ADQL used, so that the user can then decide to customize the search differently from the default.
+\item Prioritization of columns in tabular data displays for the most important tables, making --- in the absence of user requests to the contrary --- a consciously designed subset of the columns in these tables more easily accessed in the table viewer, in a column picker, etc.
+\item Custom designs of mouse-over inspectors for data points in plots generated from key tables.
+\item Pre-configured, UI-selectable actions for generating commonly used displays or calculated columns.
+For example, for photometric Object data where the actual database table contains per-band magnitudes, the UI may provide single-click actions for choosing to display colors, or even request standard displays like color-color or color-magnitude plots.
+\item Different default settings for parameters such as image stretch for different types of images (e.g., for coadds, difference images, and calibration flats).
+\end{itemize}
+
+The successive versions of the Prototype Data Access Center deployments of the Portal, and the use of the Portal during commissioning, will be used to gather experience and user recommendations to guide the development of the most useful such customizations as the operations era approaches.
 
 \subsection{Use of the LSST Stack}\label{use-of-the-lsst-stack}
 
