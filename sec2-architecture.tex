@@ -77,7 +77,7 @@ Image and visit metadata includes information about the observation captured at
 the time.  It also includes information derived later from analyzing the data
 and metadata, such as an accurate mapping from pixel coordinates in an image to
 sky coordinates or an estimate of the photometric zeropoint in an image.  The
-metadata will follow the Common Archive Observation Model \citep{CAOM2} as its
+metadata will follow the Common Archive Observation Model \citep{2012ASPC..461..339D,CAOM2} as its
 core.  This metadata will be stored in relational databases and made available
 via ADQL queries.
 
@@ -170,13 +170,14 @@ directly visible to the user in the LSP in the JupyterLab Aspect.
 
 The LSP Web APIs Aspect provides services to retrieve catalog and image data
 products.  Access to catalog data products is provided by a Web service that
-supports the VO TAP protocol with queries specified in ADQL.  Access to image
+supports the VO TAP protocol \citep{2010ivoa.spec.0327D} with queries specified in ADQL \citep{2008ivoa.spec.1030O}.
+Access to image
 and file data products is provided by a separate Web service that supports the
-VO SIA, SODA, and VOSpace protocols.  The image and file service is also
+VO SIA \citep{2015ivoa.spec.1223D}, SODA, and VOSpace \citep{2013ivoa.spec.0329G} protocols.  The image and file service is also
 responsible for regenerating "virtual" data products and converting from
 internal to external data formats as necessary.  Both of these Web services
 support asynchronous operations, as some requests will have long response
-latencies (e.g.  large-scale catalog queries or data regeneration).  Access to
+latencies (e.g.\  large-scale catalog queries or data regeneration).  Access to
 metadata about images and files is provided by TAP/ADQL queries on metadata
 tables, rather than a distinct metadata service.  More detail on these services
 is provided in section~\ref{api-aspect}.
