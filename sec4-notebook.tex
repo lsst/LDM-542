@@ -1,0 +1,57 @@
+\section{The Notebook Aspect}\label{notebook-aspect}
+
+The Science Platform offers in-house scientists and engineers as well as (in operations) general science users the opportunity to interactively explore the LSST dataset from a python notebook environment.
+
+\subsection{JupyterHub / JupyterLab service}\label{jupyterhub-jupyterlab-service}
+
+The notebook service is a scalable kubernetes deployment with JupyterHub spawning individual JupyterLab pods for each user. The basic architecture is outlined in \figref{fig:jlarch}. JupyterLab is a rich notebook architecture that offers terminal access and dashboarding in addition to the traditional Jupyter Notebook concept and the use of JupyterHub allows it to be scaled to demand as infrastructure allows.
+
+A user of the JupyterLab sevice will hence be able to interact with LSST services in the same way they might have with python scripts in a shell environment. They can use our python interfaces to the web APIs and the Butler for data access, the interface to the workflow system for batch processing, visualisation via bokeh, Firefly, matplotlib etc.
+
+The capabilities of the service are tied to major project milestones outlined in the table below in a series of phased releases.  Each release is primarily targeted at a different audience -  see \secref{application-of-the-science-platform-inside-the-project} for a summary of how the capabilities of the Science Platform as a whole are going to be used by teams inside the project.
+
+\begin{footnotesize}
+% \begin{longtable}[c]{|l|l|p{0.4\textwidth}|l|}
+\begin{longtable}[c]{|l|l|l|l|}
+\toprule
+Version & Audience & Target L2 Milestone & Shims ok?\tabularnewline
+\midrule
+\endhead
+proto & SQuaRE and Arch & none & y\tabularnewline
+alpha & DM devs, Commissioning team training & LDM-503-1 &
+y\tabularnewline
+beta & Commissioning Team & LDM-503-9 & y\tabularnewline
+1.0 & Commissioning (ComCam) Capabilities & LDM-503-12 &
+n\tabularnewline
+2.0 & Commissioning (Science Verification) Capabilities & LDM-503-14 & n\tabularnewline
+3.0 & General Science User Capabilities & LDM-503-16 & n\tabularnewline
+\bottomrule
+\end{longtable}
+\end{footnotesize}
+
+Note in particular that in addition to the originally planned ``Level 3'' science user capabilities, the JL service is the primary interface of the LSST System Scientist to Commissioning. This introduces scope not required by the general science user, eg. timely access to data in the Engineering Facilities Database and the ability to rapidly deploy instances of the service on the Commissioning Cluster.
+
+For analyses requiring significant data processing, a process for transitioning a trial-and-error notebook into a batch job involving execution over a large dataset will be provided.
+
+For detailed architectural discussions of the JupyterLab development work-in-progress, its interfaces to other components and the current schedule for major and internal milestones see \citeds{SQR-018}. As technical choices are baselined they will transition to this document.
+
+\begin{figure}
+  \includegraphics[width=\textwidth]{images/square/jupyterlab_alpha_arch}
+  \caption{Architecture of the proof-of-concept (alpha) JupyterLab deployment}
+  \label{fig:jlarch}
+\end{figure}
+
+\subsection{Pre-installed LSST software}\label{pre-installed-lsst-software}
+
+An important advantage of the JupyterLab environment is that it is already set up and optimised for running a variety of LSST data. We achieve this by building containers directly from the weekly releases created by our continuous integration system and then deploying them to JupyterHub which asks the user which version to use to spawn their pod. This means the users always have a choice of cadence (latest weekly or last stable) in their environment depending on their risk tolerance versus appetite for the latest feature. We plan to make other complementary third-party astronomical packages (eg. sextractor) available too.
+
+\subsection{Pre-configured access to LSST data}\label{pre-configured-access-to-lsst-data}
+
+The JupyterLab service will make use of standard LSST stack features such as DAX services, the Butler, and their initialisation through the SuperTask Activator to allow python-level access to LSST data. After that users can use a mix of their own code and stack classes to manipulate and visualise the data. An example notebook running on our prototype deployment using classes from the LSST stack is shown in \figref{fig:jlsimon}.
+
+\begin{figure}
+  \includegraphics[width=\textwidth]{images/square/jupyterlab_nb.png}
+  \caption{Example of star-galaxy separation analysis with the JupyterLab prototype}
+  \label{fig:jlsimon}
+\end{figure}
+

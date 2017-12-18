@@ -3,7 +3,7 @@
 % lsstdoc documentation: https://lsst-texmf.lsst.io/lsstdoc.html
 
 % Package imports go here.
-
+\usepackage{booktabs}
 % Local commands go here.
 
 % To add a short-form title:
@@ -14,10 +14,14 @@
 % \setDocSubtitle{A subtitle}
 
 \author{%
-Gregory Dubois-Felsmann
+Gregory Dubois-Felsmann,
+Frossie Economou,
+and
+Kian-Tat Lim
 }
 
 \setDocRef{LDM-542}
+\setDocUpstreamLocation{\url{https://github.com/lsst/LDM-542}}
 
 \date{\today}
 
@@ -33,7 +37,7 @@ This document describes the design of the LSST Science Platform, the primary use
 % Fields: VERSION, DATE, DESCRIPTION, OWNER NAME.
 % See LPM-51 for version number policy.
 \setDocChangeRecord{%
-  \addtohist{1}{YYY-MM-DD}{Unreleased.}{Gregory Dubois-Felsmann}
+  \addtohist{1}{2017-07-07}{First Draft.}{Gregory Dubois-Felsmann, K-T~Lim, Frossie~Economou}
 }
 
 \begin{document}
@@ -42,10 +46,22 @@ This document describes the design of the LSST Science Platform, the primary use
 % Table of contents is added automatically with the "toc" class option.
 \maketitle
 
-% ADD CONTENT HERE
+\input{sec1-introduction.tex}
+
+\input{sec2-architecture.tex}
+
+\input{sec3-portal.tex}
+
+\input{sec4-notebook.tex}
+
+\input{sec5-api.tex}
+
+\input{sec6-interconnectedness.tex}
+
+\input{sec7-application.tex}
 
 % Include all the relevant bib files.
 % https://lsst-texmf.lsst.io/lsstdoc.html#bibliographies
-\bibliography{lsst,lsst-dm,refs_ads,refs,books}
+\bibliography{local,lsst,lsst-dm,refs_ads,refs,books}
 
 \end{document}

@@ -1,0 +1,251 @@
+\section{The Portal Aspect}\label{portal-aspect}
+
+The Portal Aspect of the LSST Science Platform provides a Web user interface for the science community to discover, access, explore, analyze, and download the LSST data.
+It provides query and visualization services for all the LSST data products, designed to facilitate the user's discovery and exploration of the wide variety of catalogs and image types available.
+It illuminates the connections among the data products, including the data flows that produced them, and provides contextual access to relevant documentation.
+
+The Portal Aspect provides for both simple form-based queries and the construction of complex queries in ADQL.
+It provides a sophisticated set of data visualization capabilities for inspecting the results of queries, both for catalog and image data, and performing basic exploratory data analysis on the results.
+
+It provides access not only to the Project's released data products but to storage for file- and database-oriented user data, and facilitates the sharing of such data between users and within collaborations.
+
+The implementation of the Portal Aspect within the overall Science Platform, and its reliance on common underlying services with the other Aspects, allows users to identify and query data in the Portal and then access the results in the Notebook Aspect, where they can perform custom analyses and draw on the full variety of computational and visualization tools available in the Python language.
+Conversely, users can also query or create data in the Notebook Aspect, constructing complex ADQL queries and processing workflows, and then make the results available in the Portal for visualization.
+
+The Portal Aspect is being designed to serve users with a wide range of levels of expertise and knowledge of the LSST survey and data products.
+It provides new and casual users with a guided introduction to, and discovery of, all the LSST data products, but also provides expert users with a source of quick reference information on the available data products and their structure, and the associated documentation.
+
+The Portal Aspect is intended for users with data rights.
+It will, therefore, start with a login screen at which user may use the credentials they have registered with the LSST project to identify themselves.
+All interaction with the detailed survey data will require their user account to hold the appropriate rights.\footnote{Note that although the \emph{broadcast} of alerts via VOEvent (or a successor) is world-public, the use of the \emph{Science Platform} to browse or query the historical alert database is limited to data rights holders.}
+How much broad summary information may be provided to unauthenticated users through the Portal itself --- e.g., documentation on the LSST project, a summary of the progress and coverage of the survey --- versus through other public faces of the Project is yet to be determined.
+
+Since all users will be authenticated, the Portal will be able to provide identity-based persistent state that allows users to start their work in one browser and then continue it elsewhere.
+How much user state will be identity-based and how much will be session-based is still being considered and will be adjusted in response to user feedback.
+
+The Portal Aspect also provides convenient access to external data relevant to the understanding and exploitation of the LSST data products:
+to reference catalogs maintained on LSST systems,
+to a selection of specific publicly available data archives,
+and to any data archives available through standard VO services.
+
+\subsection{Generic Data Browsing}\label{generic-data-browsing}
+
+A key requirement on the Portal is that it provides for discovery of all the LSST catalog and image data products as well as the Observatory metadata such as the contents of the Engineering and Facilities Database.
+By relying on the creation of extensive metadata on the structure of the data products in the Science Pipelines code and other data sources, and on its delivery via the deployment of the data for release through the API Aspect and the underlying databases and services, the Portal is able to provide content-sensitive documentation, query, exploration, and visualization of every released table.
+
+Driven by the metadata available through the API aspect, the Portal will be able to display to the user the available data releases, and all the tables available in each release and in Level~1.
+The Portal will allow the user to select the the data product to search on, provide a search form for the selected data product, generate the search request based on user's input, submit the search and display the results.
+If sufficient metadata are available, a detailed search form will be constructed that allows the user to specify constraints on any column without having to know how to write an ADQL query.
+The search form will also always provide a means for the user to specify an ADQL query directly.
+In either case, the Portal will then pass the ADQL along to the API Aspect to do the search.
+
+Given appropriate metadata (e.g., IVOA UCDs), the Portal will recognize specific columns as representing spatial data, particularly sky coordinates, and will provide contextually appropriate search forms supporting commonly-used queries such as cone and box searches.
+
+If the selected data product is catalog or other tabular data, the search results will be displayed as a table in the Portal.
+The table viewer will provide a familiar set of behaviors for manipulating the results, such as sorting by column, setting the page size, and customizing the column selection.
+In addition, it will provide basic data analysis features such as the ability to filter on a column or add a synthetic (calculated) column.
+For any row in a query result, the system will provide the ability to obtain a metadata-driven formatted view of all the data in the row --- a ``property sheet'' for the row --- which can be extended to the full width of the underlying table(s) (in effect performing a ``SELECT *'' on demand for a selected row in a narrower query result).
+By providing adequate metadata throughout the LSST data products, the Portal will be enabled to, for instance, display values together with their uncertainties in these property sheets.
+
+The Portal will recognize columns that are keys to information in other tables and will facilitate navigation to those tables for the related information.
+
+The Portal will provide for straightforward plotting of tabular data.
+It will provide for the creation of scatter (or line) charts for any selection of X and Y axes from the available columns or arithmetic expressions based on combinations of columns, with assistance from the UI in actions such as finding columns of interest to use or verifying the spelling of their names.
+The Portal will also have the ability to create histograms on demand for columnar data or expressions on columnar data.
+
+If the selected data product is image data (i.e., if the search was on an image metadata table), the Portal will be able to use the associated metadata to construct queries for the images themselves and display them to the user.
+A variety of functions will be available to adjust and interact with the image displays: stretch, color change, zoom, rotate, flip, crop, measure distance between two points, overlay a variety of coordinate grids, add markers, upload DS9-style ``region files'', plot the telescope field of view, etc.
+
+Tables of catalog data containing IDs linking to the images on which the measurements were made can be used in the same way to drive browsing over image displays.
+
+The user experience when viewing image data will depend on the latency of availability of the image data from the underlying services.
+Currently only coadded images and a 30-day cache of calibrated single-visit images (and cutouts from such images) are expected to be available with low latency.
+The Portal will be able to deliver views such as ``flip books'' of cutouts from the single-epoch images for a given region of sky for the entire survey, but only upon submitting a request for the data, which may take of the order of several hours to fulfill.
+The user workspace may be used to save the results of a limited number of such data requests, based on user quotas, for later re-use.
+
+The table, charting, and image display components of the Portal will be linked through an underlying shared data model.
+As a result, the Portal can provide ``brushing and linking'' and similar capabilities, reflecting selections and operations on data in one component into the other components.
+For instance, the results of an Object table catalog query can be displayed simultaneously as a table, an overlay on deep coadd images, and a color-magnitude diagram.
+Selection of a region in the color-magnitude diagram will be immediately reflected as a highlighted selection of rows in the corresponding table and of object markers in the image overlay.
+Similarly, a column-based selection in the table will be reflected in the diagram and on the image.
+% The property sheet for an object will be available by UI action on any of these representations: the table row, the object marker on an image, or its symbol in the color-magnitude diagram.
+
+All query results --- tables and images --- will be available for download in either their original or interactively modified forms.
+Data may be downloaded either to the user's remote system (i.e., the system running the browser) or to the user's Science Platform workspace.
+The Portal Aspect will also support the creation of user databases based on tabular query results.
+
+In addition, all queries on LSST or LSST-hosted performed by the Portal through the API Aspect will be associated with the user and will be readily retrievable through the Notebook Aspect or directly through the API Aspect.
+This capability, further discussed below, is the key to enabling seamless scientific workflows that cross the Aspects.
+It will also be possible for a user to browse their query history and select individual queries for re-execution or for download of the previous results (if they are still in the results cache).
+
+The Portal Aspect will provide for access to user data, both in the Science Platform's user workspace (which accommodates file-oriented data) and in user-created databases.
+It will provide a traditional hierarchy-browser capability for the workspace, with the ability to inspect and visualize the contents of image or data table files of recognized types (e.g., FITS, VOTable, CSV).
+The workspace browser will also provide basic management functions for the organization of the workspace hierarchy, renaming and deletion of files, and the like.
+The Portal Aspect will provide for discovery, query, and visualization of user databases using the same generic data browsing tools as for the LSST data, though the sophistication of this interface will depend on the availability of adequate metadata for the user databases.
+
+The generic data browsing capabilities of the Portal will also be available for selected non-LSST reference catalogs that will be hosted at the LSST Data Access Centers, for purposes of calibration, data quality analysis or user convenience.
+The semantic knowledge of the LSST data that the Portal is planned to exploit may be more limited for these hosted external datasets, but all the basic functions of the Portal will still be available.
+In addition, the Portal will be able to access any publicly available dataset that has a VO-standard interface, particularly a TAP/ADQL interface.
+Semantic features of the interface will be enhanced when external data (hosted or remotely accessed) are organized according to the CAOM model (in the case of observational metadata) and when queries return well-curated UCDs.
+Query results will be capable of being saved to the user workspace.
+
+\subsection{Documentation Delivery}\label{documentation-delivery}
+
+A key function of the Portal is to connect the user to documentation on the Portal itself, the Science Platform more generally, the data structure and quality, the data processing, the survey, and the LSST itself.
+Much of this documentation will be created by other parts of the project, but the Portal will provide a starting point for discovering relevant documents.
+
+\subsubsection{Context-Dependent Help}\label{context-dependent-help}
+
+The Portal will provide online documentation in a variety of ways: implicitly through the naming and labeling of UI elements and screens, via ``tool tips'', and via dedicated ``Help'' buttons or icons.
+
+UI elements such as the label and title for a window, an input form, an input field, a column in a result display, a function name, etc. are the first points of entry for users to understand and interact with the LSST data.
+Such labels and titles have to be well thought out, as precise and unambiguous as possible, but also human-readable.
+This may mean that many entities may need to have both an ``internal'' name, such as the true name of a table in a database, and a ``common name'' that facilitates human understanding and speech about the entity.
+In such cases, if the common name is displayed by default in the UI, the UI must allow the user to discover \emph{and copy and paste} the true name so that it can be used in contexts, such as typing ADQL queries, where it is required.
+
+Due to the limitations on screen real estate and resolution, and the desire to design ``efficient'' layouts that devote as much space to the data as possible, labels and titles cannot generally contain all the useful information available.
+A second level of context-sensitive documentation is, therefore, provided in the form of ``tool tips'' or hover-over text.
+The design will allow for descriptive text to be associated with all data product entities, notably table and column names, and displayed on mouse-over.
+(The actual provision of this documentation will be a collaborative effort across Data Management.)
+In addition, the availability of metadata such as units and IVOA UCDs will permit the delivery of context-dependent help in the interpretation of displayed values and in the use of search form fields.
+
+The final category of context-dependent online documentation will be associated with explicit ``Help'' icons in various places in the interface.
+These will take the user to detailed documentation in another window, with a strong preference for ``deep-linking'' that takes the user first to the most relevant point in a document.
+It is by this means that we expect to provide access to the larger world of documentation on the data processing, data quality reports, and documentation on the survey and the Observatory itself.
+
+\subsubsection{User Guide}\label{user-guide}
+
+While the aim of the Portal design will be to make its use, and the features it provides, as evident as possible through the UI elements themselves, we nevertheless expect to provide a user guide to the Portal.
+The user guide will describe the major capabilities of the Portal, the options available associated with each major screen and function, and design specifics such as the use of user state vs. session state.
+It will grow, with user feedback, to contain additional information of a ``FAQ'' nature that has been found to be useful.
+The user guide will contain examples that alert users to the breadth of capabilities they can expect to find in the Portal Aspect and motivate their use with scientific examples.
+Elements of the user guide will be linked to appropriate places in the UI as context-dependent help, but will also be available as part of the full document.
+
+Some parts of the user guide will naturally cross Aspects of the Science Platform --- for instance, a user-friendly explanation of the ``user workspace'' will naturally cover its availability and use from all three Aspects.
+
+\subsubsection{Reference and Deployment Manuals}
+
+Along with the user guide, the Portal development project will also produce reference and deployment manuals.
+The reference manual will include API documentation for both the client and server components of the Portal, as well as documentation on the interfaces the Portal relies on with the rest of the LSST system.
+
+The deployment and maintenance manual will provide the information required to maintain the operation of the Portal in the context of the LSST infrastructure, including information on how to run and configure its components, and how to ensure that they are able to communicate successfully with the rest of the Science Platform components and infrastructure.
+It is intended primarily to be useful to the project's operations staff, but it will also be aimed at providing information useful to those who may wish to set up additional instances of the Science Platform outside the project.
+
+\subsection{Customized Workflows}\label{customized-workflows}
+
+In addition to the metadata-driven generic data exploration capability, the Portal Aspect will provide dedicated workflows aimed at improving the user experience for access to a small number of the most commonly accessed LSST data products.
+
+This involves some extra effort to design the specific screens, UI actions, and connections from one to another.
+It involves a tradeoff between the improvement in user experience and a potentially increased exposure to the need to modify these elements of the Portal to account for changes in the structure of the data, e.g., from one data release to the next.
+It can also be seen as a tradeoff between providing certain functionality directly versus extending the capabilities and generality of the metadata system to unjustifiable levels.
+
+Examples of Portal features in this category may include:
+
+\begin{itemize}
+\item In cases where the scientific information of the information in one table requires a more complex query involving, for example, calibration information from another table (e.g., the subtraction of photometric zero-points), the Portal will provide UI support for the single-click application of that calibration to queries generated from the standard screens.
+It will then also provide contextual help explaining what has been done, so that the user can learn the underlying query language that is required and then be able to perform similar queries, e.g., in the Notebook aspect, without the UI support.
+\item UI guidance for the interpretation of parent-child relationships between entities related by deblending algorithms.
+\item Property sheet screens for the most important tables (e.g., Visit, Object) that organize and present the data in more user-friendly ways that depend on expert knowledge of, e.g., what the most scientifically interesting and most commonly used attributes are, or which attributes may be the most likely to be of interest to see close to each other on the screen, or that provide explanatory text or visual guidance beyond what can be readily represented by the metadata and general contextual help system.
+\item Customized UI actions available in property sheets or the table viewer for key tables, providing a greater richness and/or user-friendliness of follow-on searches.
+For example, we expect to provide a simple ``Display light curve'' UI action on the property sheet for an Object or a DIAObject.
+In contrast, in a generic-browsing version of the Object property sheet, the same functionality might be met by a ``Search related tables'' UI element that would let the user pick the ``ForcedSource'' table from a list of tables with foreign-key columns pointing back to Object, and then pick the appropriate flux column from the ForcedSource table.
+In cases where such simplified functionality is provided, the contextual help system will be used to ensure that the user understands what the actual search performed is, including the ability to review the ADQL used, so that the user can then decide to customize the search differently from the default.
+\item Prioritization of columns in tabular data displays for the most important tables, making --- in the absence of user requests to the contrary --- a consciously designed subset of the columns in these tables more easily accessed in the table viewer, in a column picker, etc.
+\item Custom designs of mouse-over inspectors for data points in plots generated from key tables.
+\item Pre-configured, UI-selectable actions for generating commonly used displays or calculated columns.
+For example, for photometric Object data where the actual database table contains per-band magnitudes, the UI may provide single-click actions for choosing to display colors, or even request standard displays like color-color or color-magnitude plots.
+\item Different default settings for parameters such as image stretch for different types of images (e.g., for coadds, difference images, and calibration flats).
+\end{itemize}
+
+The successive versions of the Prototype Data Access Center deployments of the Portal, and the use of the Portal during commissioning, will be used to gather experience and user recommendations to guide the development of the most useful such customizations as the operations era approaches.
+
+The Portal will be designed to facilitate the continued development of additional customizations during the operations era, as user experience accumulates.
+
+\subsection{Use of the LSST Stack}\label{use-of-the-lsst-stack}
+
+The basic functionality of the Portal Aspect is based on the external persisted forms of the LSST data provided through the API Aspect's Web interfaces, which return ``on the wire'' data in community standard forms such as FITS image and table files and VOTable.
+In many cases the Portal implementation is able to work directly with these persisted forms, without dependencies on the LSST pipeline code base in order to interpret them.
+However, among the LSST data products there are also ones for which there are no semantically meaningful community standard forms, and for the interpretation of which the use of the LSST code is very useful, if not indispensable.\footnote{``Not indispensable'' because ultimately all the persisted data object forms require complete documentation, of a quality and depth which would permit the independent development of code to interpret them.  However, in some cases, due to the complexity of the data model, we anticipate that such a reimplementation would be costly to develop.}
+Likely examples of such data objects are source footprints and ``heavy footprints'' (bit maps and pixel flux data, respectively, for single sources and groups of sources), and image PSF models.
+
+In order to offer visualizations of these data products, the Portal Aspect will invoke LSST stack code to transform them into useful visual forms such as image overlays, plots of PSF variation, and the like.
+The Portal Aspect will only attempt to provide a limited set of such standard visualizations, recognizing that the Notebook's Python environment and the range of visualization toolkits that will be available there will enable the user community to develop a rich set of specialized tools for these purposes.
+
+Note that even in cases where there are LSST data products for which no dedicated visualization is provided, the Portal Aspect will still provide the ability to inspect the data object contents.
+For example, for data products represented by complex FITS table models, the tables themselves will be viewable even if the Portal does not directly provide a semantic interpretation of the data product they represent.
+
+The extent to which this will be required is still being determined, because the full persisted data model for the LSST data products has not yet been specified.
+As above, development will prioritize the development of visualizations for the most commonly used or otherwise important data products.
+
+\subsection{API Interaction with the Portal}\label{api-interaction-portal}
+
+The Portal Aspect will provide APIs for interacting with its capabilities and with user sessions.
+It will be possible for a user to programmatically upload image and tabular data and open a visualization in a current Portal session --- again, with the sophistication of the results dependent on the provision of metadata.
+It will also be possible to programmatically query the state of a session, in support of users' ability to begin a workflow in the Portal and then continue it programmatically outside the Portal Aspect -- most notably, inside the Notebook Aspect.
+
+\subsection{Extensibility of Visualizations}\label{extensibility-of-visualizations}
+
+The Portal software infrastructure is being developed to permit users to create visualizations not in the basic Portal software release.
+The Portal relies on the open-source scientific graphics library Plotly for the generation of a variety of types of plots.
+Plotly provides well-documented APIs and data structures for the creation of a wide variety of scientific and other graphics.
+While only a few of these will be used in the standard Portal configuration, the Portal will be designed to permit the use of the underlying interfaces to add custom plots under user control.
+
+\subsection{Extensibility of the UI}\label{extensibility-of-the-ui}
+
+The Portal Aspect's UI will be extensible with custom actions associated with data types and selections.
+For example, in the Prototype Data Access Center the capability has already been demonstrated of creating a button in the image-viewing UI that allows the connection of a selected region on an image to user code that performs an action based on that selection.
+
+\subsection{Implementation}
+
+% \subsubsection{Firefly}
+
+The planned implementation of the Portal Aspect is based on an evolution of Firefly, originally developed at Caltech/IPAC for the NASA Spitzer Heritage Archive and the IRSA archives.
+Firefly is a framework and a set of libraries for the development of Web-based client-server applications for accessing astronomical archives.
+It comes with a native set of capabilities: basic data-search functions, astronomical image visualization, and sophisticated tabular data visualization capabilities including a shared data model that permits the delivery of brushing-and-linking functionality across tabular, chart, and image displays.
+Firefly also provides a set of JavaScript, Web, and Python APIs, allowing the construction of customized Web applications, but also allowing users to access the visualization components in their own simple web pages (or Jupyter notebooks) without having to build a complete web application.
+
+Many Firefly-based applications are in operations in IRSA-operated archives, such as the Spitzer Heritage Archive, the WISE Image Service, the Planck US Data Center visualization service, PTF Image Service, and the new IRSA Finder Chart application.
+
+Conceptually, Firefly-based applications are organized into three tiers: Client, Server, and Data Services.
+The Client tier is responsible for rendering the display of the data and providing the UI.
+The Client is a native Javascript application based on the React framework.
+The Javascript APIs of the components of the application allow for the straightforward construction of a wide variety of portal UIs combining images, tables, and plots of the tabular data.
+Standard Scientific visualizations are generated in the Client via the Plotly libraries, while astronomical image visualizations are handled in a Google Maps-like way with tiled rendering performed on the Server.
+
+The Server tier manages searches, the Firefly shared data model that enables data linkages across visualizations, and provides the interface to other supporting services such as authentication providers.
+The Server tier provides an abstraction layer for creating ``search processors'' usable from the Client.
+These are plugin interfaces to a variety of data sources, providing support both for executing queries via standard external protocols such as IVOA TAP and for working with data services with custom protocols.
+The Server handles search requests, dispatches them to the proper data service, obtains the results,
+and prepares them for rendering and display.
+The Server also provides exploratory data analysis features that can be applied to the data it has received.
+
+The core of the Server is a Java application, hosted on a Tomcat server.
+Communication between the Client and Server tiers is through a combination of standard HTTPS requests and a WebSocket interface.
+The Server tier provides the Web APIs --- and wrapper Python APIs for them --- that enable driving and querying the server state from other system components or by users.
+
+The Server tier includes the ability to extend the capabilities of Firefly through microservices.
+This facility will be used in the Portal Aspect to provide visualizations for LSST-specific ``blob'' data products for which the DM stack code will be used to convert the data product into an artifact suitable for display.
+
+Finally, the Data Services tier actually performs searches and other data retrievals, and is generally composed of components provided by the underlying data archives.
+In the case of the Portal Aspect's Firefly application, the Data Services tier essentially comprises the data access services provided by the API Aspect.
+
+As part of the LSST project, Firefly will be extended with more sophisticated metadata models enabling the the implementation of the advanced generic-browsing behavior described above, support for all-sky visualizations based on HEALPix and the HiPS file format, and with the ability for users, via the Firefly APIs, to call on advanced visualizations provided by the Plotly library, beyond those used for Firefly's native functions.
+
+In addition, in developing the Portal, the SUIT team is reviewing the existing heritage of UI elements provided by Firefly and revising the appearance and workflows to take advantage of contemporary developments in user experience design, and to provide a uniform experience across the tool.
+
+Key design guidelines in this process are:
+\begin{itemize}
+\item the efficient use of display space, with as many pixels as possible devoted to rendering data in preference to static UI elements;
+\item in data-viewing screens, a corresponding preference for more context-sensitive ``pop-up'' UI elements versus static buttons;
+\item consistency of presentation of common entities (e.g., sky coordinates) across the Portal, with an emphasis on the ease of selecting an entity in one place in the UI and using it (e.g., by copy and paste) in another without editing;
+\item consistency of layout and of the behavior of UI elements, including issues like the use of modal versus modeless dialogs and inspectors, and the positioning and meaning of controls such as ``OK'', ``Apply'', ``Cancel'', and ``Dismiss''.
+\end{itemize}
+
+\subsection{Interface to the Alert Distribution and Filtering Services}
+
+Beyond providing the archive-access functionality described above, the Portal Aspect has the additional role of providing data-rights holders a simple UI for access to the alert distribution and filtering facilities provided by the Project.
+This is essentially a ``mini-broker''; unlike the envisioned community alert brokers, the LSST-specific facilties will have access only to the information in the LSST alert messages themselves.
+The UI will allow users to establish and control subscriptions to the alert stream, and to select from a modest set of pre-defined filters, or submit simple user-defined filters, to be applied to the alert stream they receive.
+
+The Portal UI for this will be closely tied with screens for the querying of the alert database and the visualization of its contents, to provide convenient workflows for users interested in the time-domain LSST data.
+We anticipate being able to provide data access workflows that enable users to tie the information actually present in alerts to additional data, though context-sensitive searches and the like.

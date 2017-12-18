@@ -1,0 +1,30 @@
+\section{The Interconnectedness of the Science Platform}\label{interconnectedness-of-the-science-platform}
+
+A key element in the Science Platform design is that by layering the three Aspects on top of the same underlying services, it enables scientific workflows that cross from one Aspect to another.
+
+For example, work can begin with using the Portal Aspect to find data, continue in the Notebook Aspect to analyze it and create and store a derived data product, and the API aspect to access it remotely.
+Or, a complex query can be constructed in the Notebook Aspect and the results sent for visualization in the Portal Aspect.
+
+The ability to work in this manner depends on three underlying capabilities of the Science Platform.
+
+\subsection{Sharing Data}\label{sharing-data}
+
+All three Aspects expose the same LSST data products and provide access to the same user workspace and user database data.
+The user workspace, likely to be accessible via a VOSpace service, is available in any place in the Portal where the download or upload of data is semantically appropriate.
+For instance, a target list from another survey or mission can be uploaded to the workspace, accessed in the Portal to perform a cross-match query, and analyzed in the Notebook together with other LSST data to identify structure in the combined data.
+
+\subsection{Sharing Queries}\label{sharing-queries}
+
+Because the underlying DAX services allow for asynchronous queries, with a query submitted and assigned a name which is available for later re-use, and because the system is capable of recording the history of queries for a user, a query can be submitted from one Aspect and the results accessed from another.
+
+Queries can be constructed using the Portal UI, with the Portal's visualization tools used for a quick look to ensure that the results are as expected, and then the query results can be retrieved from the Notebook - or the query itself can be programmatically repeated at a later date, e.g., by someone tracking the development of Level~1 data on a transient object.
+
+Or complex queries can be programmatically constructed in ADQL from Python code in the Notebook, and the results discovered and browsed in the Portal.
+
+\subsection{Sharing State}\label{sharing-state}
+
+Finally, the Portal exposes both read and write access to elements of its internal state.
+User code can push data at the Portal for visualization using its Python or Web APIs, or modify the state of a display (e.g., an image stretch).
+This capability can be used for overlays; for example, if the user is viewing an image in the Portal and has identified points or regions of interest in the image using code in the Notebook, those coordinates can be pushed to the Portal as an overlay.
+User code can also retrieve state from the Portal; this can be used to retrieve data from a user's session, but also to facilitate interactions with the data.
+For example, the position of a point or region selection on an image, or a row selection on a table, that the user has made in the Portal UI can be made available to user Python code in the Notebook.

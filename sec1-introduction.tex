@@ -1,0 +1,57 @@
+\section{Introduction}\label{introduction}
+
+The ``LSST Science Platform'' (LSP; \citeds{LSE-319}) refers to a set of software and services that is used to provide data rights holders and project team members access to the LSST data and support for its scientific analysis, and is frequently used to refer in particular to the user-facing presentation of these components of the LSST system.
+The requirements for the Science Platform are described in \citeds{LDM-554}.
+
+The Science Platform provides access to both catalog and image data through a range of cooperating interfaces (Python APIs, Web APIs, and a graphical user interface), as well as providing dedicated computing and storage resources to users at the LSST Data Access Centers.
+
+The Science Platform's principal components are delivered by the LSST construction project groups at SLAC (Database and Data Access), NCSA (middleware and infrastructure), LSST-Tucson (SQuaRE), and IPAC (SUIT).  These components make extensive use of the Science Pipelines software developed by the UW (Alert Production) and Princeton (Data Release Production) groups to provide data analysis software frameworks and algorithms.
+
+The Science Platform is visible to users through three ``Aspects'' giving access to a unified system.
+
+
+\subsection{The Portal Aspect}\label{portal-aspect-intro}
+
+The Portal Aspect, a highly evolved version of a traditional astronomical-archive GUI, provides Web-based query and visualization tools for all the LSST data products, designed to facilitate the user's discovery and query of the wide variety of catalog and image data products, illuminate the connections between them, enable exploratory data analysis, and provide contextual access to relevant documentation.
+The Portal Aspect's UI is extensible with additional computation and visualization tools developed by users and collaborations.
+It provides access not only to the Project's released data products but to storage for file- and database-oriented user data, and facilitates the sharing of such data between users and within collaborations.
+
+\subsection{The Notebook Aspect}\label{notebook-aspect-intro}
+
+The Notebook Aspect provides access to a Python-oriented computational environment hosted at the LSST Data Access Centers through the ``Jupyter Notebook'' paradigm that has become extremely influential in astronomy and in the wider scientific computing community in recent years.\footnote{The LSST project is closely following current developments in the Jupyter project and expects to use the upcoming ``JupyterLab'' evolution of the notebook concept.  We are already using an alpha release of JupyterLab in our development activities.}
+Through a Web-based notebook interface, users are able to run Python code in close proximity to the LSST data archive, accessing and analyzing the data and generating derived data products.
+Curated releases of the LSST software stack are made available to all users of the Notebook Aspect, including all the framework and algorithmic software used in the Project's own data reduction pipelines.
+Sufficient configuration and provenance data are made available to permit users to reproduce the production processing steps and then to customize them to their own ends or to assemble entirely new analyses.
+Batch computing services and storage are available to users, with larger allocations requiring resource utilization proposals, enabling them to perform analyses of a substantial scale.
+Users are enabled to install additional software at their own discretion, enabling them to bring existing analysis code to the LSST data, and take advantage of the wide variety of computational and visualization tools available in the scientific Python ecosystem.
+
+\subsection{The API Aspect}\label{api-aspect-intro}
+
+The API Aspect provides remote access to the LSST data, user data, and user computing resources, through a set of Web APIs
+(many based on VO standards).
+The Web APIs will deliver data in community-standard formats, including, e.g., VOTable, CSV, and FITS.
+The same Web APIs are used internally in the Portal Aspect, and are also available in the Notebook Aspect.
+% No further user-accessible Web APIs will be available inside the Data Access Centers that are not also accessible from the public Internet.
+% However, the performance obtained from the Web APIs when used within the DACs will differ from when they are used across the public Internet, because of the intrinsic differences in network throughput and latency that will be available within the DACs, with their close proximity to the data services and the stored data itself.
+
+Notebook Aspect users, running their personal Python code within the Data Access Centers, will normally access the LSST data and resources through the DM Python APIs, whose implementation will generally bypass the Web APIs.
+
+\subsection{Architecture}\label{architecture-intro}
+
+Underlying all three Aspects are a common set of services hosting the LSST catalog and image data and user data products, a user storage ``workspace'', and providing access to flexible computing resources.
+Catalog data are stored in database systems providing highly scalable parallel access to the science data and Observatory metadata.
+The database systems and the Web and Python data access APIs through which they are accessed support flexible, user-defined ADQL queries.
+Image data is provided through a combination of image metadata search facilities and pixel data retrieval services that support cutouts and mosaicing.
+Additional service provide access to a wide range of metadata describing the available data products, their structure and their provenance.
+
+Further services support the creation of user image and catalog data products and facilitate the federation of user data products with the Project's
+(e.g., permitting joins between the Project's catalogs and catalogs of additional, user-derived attributes).
+User data products created within the Data Access Centers are remotely accessible through the API Aspect.
+The authentication and authorization services provided allow users to restrict access to the datasets they create to specific other users and groups of users, supporting the work of scientific collaborations.
+
+By relying on common underlying services, exchange of data and seamless workflows crossing Aspects are enabled.
+For example, the data resulting from a graphically-driven query in the Portal Aspect can be immediately accessed in the Notebook Aspect for further analysis.
+Similarly, data retrieved or created in the Python environment in the Notebook Aspect can be displayed or accessed in the Portal aspect.
+
+Both the Portal and Notebook Aspects of the Science Platform, as Web applications, are designed to be usable by remote users without the installation of any software on users' own systems, with all computing and data access hosted at a Data Access Center.
+Nevertheless, all the software required to host the Science Platform is part of the LSST open-source code base, installable on mainstream Unix-like platforms, and we anticipate its usability both by non-Project data access centers and by individuals and groups on their own systems.

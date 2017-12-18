@@ -1,0 +1,314 @@
+\section{The Architecture of the Science Platform}\label{architecture}
+
+This section presents the overall architecture of the LSST Science Platform
+(LSP, not to be confused with the Science Pipelines "stack" code), including
+its major components and interfaces and design principles.
+
+\subsection{Design Overview}\label{design-overview}
+
+The LSP is a multi-tier architecture with distinct but inter-related
+user-facing "Aspects" over an underlying layer of services that in turn
+rests on computational infrastructure.
+
+\subsubsection{Functional Architecture}\label{functional-architecture}
+
+The Portal Aspect, JupyterLab Aspect, and Web APIs Aspects provide three
+distinct user interfaces.  Internally, the LSP interfaces with the Data
+Backbone via the Data Butler client interface and direct "native" Data Backbone
+interfaces to provide access to the Science Data Archive and (for some
+instances) other data products.  The LSP also has its own data storage for
+Portal configurations, user notebooks, and other user files and databases.  It
+interfaces with compute provisioning services, authentication and authorization
+services, and resource management, including a proposal management system to
+handle requests for resources.  Networking connects the LSP with internal
+systems and the external world and provides a measure of cybersecurity.
+
+The Portal Aspect is implemented using the language-agnostic Web APIs to
+retrieve data.  The JupyterLab Aspect can also use the Web APIs if the user
+desires, either through a VO client or directly as a Web service.
+
+\subsubsection{Deployment Architecture}\label{deployment-architecture}
+
+The LSP is designed to be deployable in multiple locations within the LSST DMS.
+The production instances are the US Data Access Center, the Chilean Data Access
+Center, the Science Validation instance in the NCSA Enclave, and the
+Commissioning Cluster instance in the Base Enclave.  Additional instances are
+used for integration testing in the Integration environment and for science
+pipelines developer usage in the Developer environment.  LSP developers will
+of course instantiate components of the LSP during their own development.
+
+The LSP is composed of multiple services that are containerized and deployed
+using Kubernetes.  The underlying provisioning of compute resources is handled
+by the Provisioning and Deployment Service component of the LSST DMS.  The
+technology to be used for provisioning in this component is being evaluated and
+may vary between instances.  vSphere, HTCondor, SLURM, and OpenStack are all
+potential alternatives.  Provisioning is elastic: JupyterLab dynamically
+instantiates notebooks on demand, and the Portal and Web API services can be
+expanded or contracted as needed.  This elasticity and fault tolerance
+considerations require that the services hold minimal non-persistent state so
+that loss of a single service instance has correspondingly minimal impact on
+users.
+
+\subsection{Data Access and Storage}\label{data-access-and-storage}
+
+Since the goal of the LSP is to retrieve and analyze LSST data products,
+data access and the storage of user data are key aspects of the platform.
+
+\subsubsection{Databases}\label{databases}
+
+Since the LSST catalog data products represent the best measurements of
+astrophysical phenomena available to the project as well as metadata
+describing how data was taken and processed, it is anticipated that
+most uses of the LSP will involve these catalogs which are stored in
+databases.
+
+\paragraph{Database content overview}\label{database-content-overview}
+
+Several types of databases will be accessible to the LSP instances:
+\begin{itemize}
+\item Image and visit metadata
+\item Catalogs
+\item Composite data (binary data in catalogs)
+\item Observatory metadata (including EFD)
+\item Reference catalogs
+\end{itemize}
+
+Image and visit metadata includes information about the observation captured at
+the time.  It also includes information derived later from analyzing the data
+and metadata, such as an accurate mapping from pixel coordinates in an image to
+sky coordinates or an estimate of the photometric zeropoint in an image.  The
+metadata will follow the Common Archive Observation Model \citep{2012ASPC..461..339D,CAOM2} as its
+core.  This metadata will be stored in relational databases and made available
+via ADQL queries.
+
+Catalogs are described in detail in the Data Products Definition Document
+\citeds{LSE-163}.  They include summary measurements of astrophysical Objects,
+plus measurements in images from each epoch of observation and in difference
+images.  These will also be stored in relational databases and made available
+via ADQL queries.  The catalog of all Alerts that have been issued may be
+stored in a different database technology, such as a document database, and
+may thus use a different query interface.
+
+The above catalogs will include "BLOB" fields that provide large data items
+that are useful to retrieve along with other catalog data but are not
+suitable for searching.  Examples include samples of the posterior probability
+surface for a model, photometric redshift probability distribution functions,
+or "heavy footprints" giving deblended pixel values for an Object.  These
+are generally stored in separate tables within the relational database as
+they are used less frequently.
+
+The Engineering and Facility Database, which contains a record of all commands,
+configuration, and telemetry from the Observatory systems, will be transformed
+to provide simplified query access to conditions during each observation.  All
+data present in the original EFD will be available in the transformed EFD with
+the exception of Internal, Sensitive, or Highly Sensitive information, as
+defined in the Information Classification Policy \citeds{LPM-122}, which will
+not be available to users other than project staff.  The EFD does not contain
+Protected User data.  The Transformed EFD will be stored in a relational
+database, accessible via ADQL queries.
+
+Reference catalogs used in the LSST Alert, Calibration Products, and Data
+Release Productions will be provided, also in relational databases.  Additional
+catalogs, e.g.\ from precursor or concurrent surveys in a variety of
+wavelengths, will also be provided as relational databases depending on
+usefulness and available resources.
+
+\paragraph{Database technologies}\label{database-technologies}
+
+While many of the above databases will be implemented in "conventional"
+relational database technology, the largest catalogs will require a distributed
+system to provide sufficient performance.  The LSST-developed Qserv distributed
+database will be used to implement these.  The two implementations may vary
+somewhat in their support of ADQL features.  Users creating their own catalogs
+(see section~\ref{user-catalog-data-support}) will need to specify whether they are to be
+distributed, thereby selecting the appropriate back-end implementation.
+
+\subsubsection{Images}\label{images}
+
+LSST image data products include raw images, processed visit images, difference
+images, coadded images, and templates.  These are part of the Science Image
+Archive in the Data Backbone.  All of these are accessible to the LSP.
+
+Some data products are currently specified to be "virtual": they are
+regenerated on demand from other persistently-stored data products, reflecting
+the estimates of the technology-dependent space/time cost trade-off.  Such
+virtual data products are regenerated for the LSP by services that are part of
+the LSP Web APIs.
+
+Images will be delivered in at least FITS format; other formats may be added.
+The LSST DM internal image data format is currently FITS as well, but that may
+change in the future.  Any necessary translation between internal format and
+external format is performed by services that are part of the LSP Web APIs.
+
+Image data products typically contain additional information besides image
+pixels.  This information includes metadata describing the conditions under
+which the image was generated, its provenance and processing history, if any,
+and metadata derived from the image itself.  Much of this metadata can be
+expressed as simple data types in "headers" or similar mechanisms, but some,
+such as mask and variance planes, pixel-to-sky mappings, and point spread
+function (PSF) models, may be too complex for such a representation.  When this
+information is specific to the image, LSST DM generally stores this information
+in the same file as the image pixels, as additional pixel planes or extension
+tables.  The structure and content of these will be documented for LSP users.
+
+\subsubsection{LSST-specific Objects}\label{lsst-specific-objects}
+
+The Python objects used by the Science Pipelines code do not always
+correspond one-to-one with persisted catalog or image data products in the
+Data Backbone.  For example, an image and its background model may be persisted
+in two distinct files.  The PSF model associated with the detections in an
+image may be stored in a file while the information about the detections is
+stored in a database catalog.
+
+The component files and catalogs are directly accessible via the LSP, but
+for convenience the Data Butler client library provides mechanisms to define
+composites that combine multiple components into a single retrieved Python
+object.  Since this usage is specific to the Python language, it is only
+directly visible to the user in the LSP in the JupyterLab Aspect.
+
+\subsubsection{Data Access Services}\label{data-access-services}
+
+The LSP Web APIs Aspect provides services to retrieve catalog and image data
+products.  Access to catalog data products is provided by a Web service that
+supports the VO TAP protocol \citep{2010ivoa.spec.0327D} with queries specified in ADQL \citep{2008ivoa.spec.1030O}.
+Access to image
+and file data products is provided by a separate Web service that supports the
+VO SIA \citep{2015ivoa.spec.1223D}, SODA, and VOSpace \citep{2013ivoa.spec.0329G} protocols.  The image and file service is also
+responsible for regenerating "virtual" data products and converting from
+internal to external data formats as necessary.  Both of these Web services
+support asynchronous operations, as some requests will have long response
+latencies (e.g.\  large-scale catalog queries or data regeneration).  Access to
+metadata about images and files is provided by TAP/ADQL queries on metadata
+tables, rather than a distinct metadata service.  More detail on these services
+is provided in section~\ref{api-aspect}.
+
+Within the JupyterLab Aspect, and internal to the Web APIs Aspect, the Data
+Butler client interface may be used to retrieve Python objects, and a
+"native" Data Backbone API may be used for high-performance retrieval of
+datasets.  The Portal Aspect uses the Web APIs Aspect exclusively for data
+access; it does not use the Data Butler nor the "native" Data Backbone API.
+
+\subsubsection{User Catalog Data Support}\label{user-catalog-data-support}
+
+Users may create their own catalogs within the LSP, a capability that is
+patterned after SDSS SkyServer's "MyDB".  Catalogs may be derived from queries
+to the LSST catalogs or loaded from computations or external data sources.  As
+mentioned above in section~\ref{database-technologies}, large distributed
+catalogs meant for joining with the LSST data products must be identified so
+that they can be stored appropriately in the Qserv database.
+
+All three Aspects will provide mechanisms for creating user catalogs; the
+Portal's mechanism will be implemented via the Web APIs, as usual.  User
+catalogs may be accessed in the same ways that LSST catalog data products are
+accessed.
+
+User catalogs are backed up for disaster recovery purposes, but they are not
+fully protected against user error.
+
+\subsubsection{User Workspace Storage}\label{user-workspace-storage}
+
+Users may create their own images and files within the LSP.  These all live
+within a User Workspace that is common across all three Aspects.  All three
+Aspects will provide mechanisms for creating and retrieving user files.  In
+the JupyterLab Aspect, this is via a mounted filesystem.  In the Web APIs
+Aspect, this is via VOSpace or WebDAV.
+
+User file workspaces are backed up for disaster recovery purposes, but they are
+not fully protected against user error.
+
+\subsubsection{Data Access Permissions and Quotas}\label{data-access-permissions-and-quotas}
+
+All LSST data products are available to all users with LSST data rights.  Users
+who had LSST data rights but have since lost them may be granted access to the
+data products available as of the time of loss but not newer ones.
+
+Users may grant other users or groups of users access to catalogs and files in
+their workspace.  Such access may be read-only or read-write.
+
+Per-user catalogs and files are a limited resource with quotas determined by
+resource management (see section~\ref{resource-management}).  Some "user"
+catalogs and files may be considered to be owned by a group, with a distinct
+quota.
+
+\subsubsection{Support of Previous Releases}\label{support-of-previous-releases}
+
+The LSST baseline currently anticipates that the data products contained in the
+last two Data Releases (as well as Level 1 Alert Production data products) will
+be available through the LSST Science Platform.  Data products from other Data
+Releases would need to be retrieved via the Bulk Distribution service; they
+would not be visible within the LSP.
+
+A request to have the catalogs from all Data Releases be available through
+the LSP is being evaluated.
+
+\subsection{Computing Resources}\label{computing-resources}
+
+The LSP provides access to computing resources to enable users to analyze
+LSST data products, alone and in combination with user-provided data.
+
+\subsubsection{Basic user compute services}\label{basic-user-compute-services}
+
+Users of the Portal Aspect share computing resources allocated to the Portal as
+a whole.  The same strategy is used for the Web APIs.  Within those shared
+resources, per-user accounting is performed for resources such as queries and
+temporary disk space so that resource management policies may be implemented
+if required.
+
+Each user of the JupyterLab Aspect is assigned a virtual machine per notebook.
+The virtual machine can be selected from a menu of preconfigured installations
+of LSST and other software, or users can customize a virtual machine and save
+it for future use.  The resources allocated to the virtual machine are
+defined by policy.
+
+\subsubsection{Large-scale batch and parallel computing}\label{large-scale-batch-and-parallel-computing}
+
+Users of the LSP (any Aspect) may trigger large-scale, long-latency,
+asynchronous data processing.  This processing is handled by submitting jobs to
+a batch system based on HTCondor.  Mechanisms are provided in the three Aspects
+to monitor the status of batch jobs and retrieve their results.  Instances of
+the workload and workflow management tools and services used by the LSST Data
+Facility to manage large-scale productions will be made available to each LSP
+instance, although these will be separate and distinct from the production
+instances, of course.
+
+\subsection{Authentication and Authorization}\label{authentication-and-authorization}
+
+Identity management and associated roles and authorizations are provided by a
+unified LSST system as described in LSE-279.  This system allows the use of
+external identity providers such as the Chilean COFRe federation \citep{COFRe}
+or the US InCommon \citep{InCommon} or GitHub; those verified external
+identities are then mapped to internal LSST identities.  All uses of all
+instances of the LSP, including the Web APIs Aspect, are authenticated.
+
+\subsection{Resource Management}\label{resource-management}
+
+LSP users in the DACs will receive a certain quota of resources (compute,
+storage, query, bandwidth, etc.).  Usage beyond that quota will be allocated by
+a committee.  Outside the LSP, a proposal management system will track requests
+and allocations that will then be implemented by per-user resource management
+features within each LSP component.
+
+\subsection{Cybersecurity Considerations}\label{cybersecurity-considerations}
+
+The Data Access Center instances of the LSP are the only ones exposed directly
+to the public Internet.  The Science Validation, Commissioning Cluster,
+Integration, and Developer instances are only reachable from LSST-internal
+networks, helping to reduce the attack surface.  The DAC instances are isolated
+(on a different LAN) from the production Level 1 and Level 2 domains within the
+NCSA enclave.  Although they may share underlying computing resources, such
+resources are provisioned for either production or DAC but not both at the
+same time.  The LSST data products within the Data Backbone will be read-only
+to the DAC LSP instances.  The Data Backbone interfaces are all authenticated,
+but they will be used for some types of user data, so the Backbone must be
+hardened against attack (or accident) from the LSP.  Provisioning separate
+virtual machines per user in the JupyterLab Aspect helps to prevent unwanted
+sharing of information between users.  The Portal Aspect and Web APIs Aspect
+need to be hardened in the same ways as any Web-enabled service, including
+sanitizing user inputs, avoiding cross-site scripting, etc.
+
+\subsection{Additional Support Services}\label{additional-support-services}
+
+System management and monitoring services for the LSP will be provided by the
+infrastructure layer supporting each instance.  Monitoring at the system and
+application level will be exposed to LSP users where consistent with user
+privacy and system security.
