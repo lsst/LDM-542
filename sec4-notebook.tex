@@ -1,14 +1,16 @@
 \section{The Notebook Aspect}\label{notebook-aspect}
 
-The Science Platform offers in-house scientists and engineers as well as (in operations) general science users the opportunity to interactively explore the LSST dataset from a python notebook environment.
+The Science Platform offers in-house scientists and engineers as well as (in operations) general science users the opportunity to interactively explore the LSST dataset from a Python notebook environment.
 
 \subsection{JupyterHub / JupyterLab service}\label{jupyterhub-jupyterlab-service}
 
-The notebook service is a scalable kubernetes deployment with JupyterHub spawning individual JupyterLab pods for each user. The basic architecture is outlined in \figref{fig:jlarch}. JupyterLab is a rich notebook architecture that offers terminal access and dashboarding in addition to the traditional Jupyter Notebook concept and the use of JupyterHub allows it to be scaled to demand as infrastructure allows.
+The notebook service is a scalable Kubernetes deployment with JupyterHub spawning individual JupyterLab pods for each user. The basic architecture is outlined in \figref{fig:jlarch}.
+JupyterLab is a rich notebook architecture that offers terminal access and dashboarding in addition to the traditional Jupyter Notebook concept and the use of JupyterHub allows it to be scaled to demand as infrastructure allows.
 
-A user of the JupyterLab sevice will hence be able to interact with LSST services in the same way they might have with python scripts in a shell environment. They can use our python interfaces to the web APIs and the Butler for data access, the interface to the workflow system for batch processing, visualisation via bokeh, Firefly, matplotlib etc.
+A user of the JupyterLab sevice will hence be able to interact with LSST services in the same way they might have with Python scripts in a shell environment.
+They can use our Python interfaces to the web APIs and the Butler for data access, the interface to the workflow system for batch processing, visualisation via bokeh, Firefly, matplotlib etc.
 
-The capabilities of the service are tied to major project milestones outlined in the table below in a series of phased releases.  Each release is primarily targeted at a different audience -  see \secref{application-of-the-science-platform-inside-the-project} for a summary of how the capabilities of the Science Platform as a whole are going to be used by teams inside the project.
+The capabilities of the service are tied to major project milestones outlined in the table below in a series of phased releases.  Each release is primarily targeted at a different audience --- see \secref{application-of-the-science-platform-inside-the-project} for a summary of how the capabilities of the Science Platform as a whole are going to be used by teams inside the project.
 
 \begin{footnotesize}
 % \begin{longtable}[c]{|l|l|p{0.4\textwidth}|l|}
