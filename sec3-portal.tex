@@ -20,8 +20,8 @@ It will, therefore, start with a login screen at which user may use the credenti
 All interaction with the detailed survey data will require their user account to hold the appropriate rights.\footnote{Note that although the \emph{broadcast} of alerts via VOEvent (or a successor) is world-public, the use of the \emph{Science Platform} to browse or query the historical alert database is limited to data rights holders.}
 How much broad summary information may be provided to unauthenticated users through the Portal itself --- e.g., documentation on the LSST project, a summary of the progress and coverage of the survey --- versus through other public faces of the Project is yet to be determined.
 
-Since all users will be authenticated, the Portal will be able to provide identity-based persistent state that allows users to start their work in one browser and then continue it elsewhere.
-How much user state will be identity-based and how much will be session-based is still being considered and will be adjusted in response to user feedback.
+Since all users will be authenticated, the Portal will be able to provide identity-based persistent state that allows users to start their work in one browser and then continue it elsewhere, as well as to store user preferences.
+How much user state will be identity-based and how much will be session-based is still being considered and will be adjusted in response to user feedback during early testing and commissioning.
 
 The Portal Aspect also provides convenient access to external data relevant to the understanding and exploitation of the LSST data products:
 to reference catalogs maintained on LSST systems,
@@ -33,21 +33,21 @@ and to any data archives available through standard VO services.
 A key requirement on the Portal is that it provides for discovery of all the LSST catalog and image data products as well as the Observatory metadata such as the contents of the Engineering and Facilities Database.
 By relying on the creation of extensive metadata on the structure of the data products in the Science Pipelines code and other data sources, and on its delivery via the deployment of the data for release through the API Aspect and the underlying databases and services, the Portal is able to provide content-sensitive documentation, query, exploration, and visualization of every released table.
 
-Driven by the metadata available through the API aspect, the Portal will be able to display to the user the available data releases, and all the tables available in each release and in Level~1.
-The Portal will allow the user to select the the data product to search on, provide a search form for the selected data product, generate the search request based on user's input, submit the search and display the results.
-If sufficient metadata are available, a detailed search form will be constructed that allows the user to specify constraints on any column without having to know how to write an ADQL query.
+Driven by the metadata available through the API aspect, the Portal will be able to display to the user the available Data Releases, and all the tables available in each release and in the Prompt/Level~1 data products.
+The Portal will allow the user to select the data product to query, provide a search form for the selected data product, generate the search request based on user's input, submit the search, and display the results.
+Where sufficient metadata are available, a detailed search form will be constructed that allows the user to specify constraints on any column without having to know how to write an ADQL query.
 The search form will also always provide a means for the user to specify an ADQL query directly.
-In either case, the Portal will then pass the ADQL along to the API Aspect to do the search.
+In each case, the Portal will then pass the ADQL along to the API Aspect to do the search.
 
 Given appropriate metadata (e.g., IVOA UCDs), the Portal will recognize specific columns as representing spatial data, particularly sky coordinates, and will provide contextually appropriate search forms supporting commonly-used queries such as cone and box searches.
 
 If the selected data product is catalog or other tabular data, the search results will be displayed as a table in the Portal.
 The table viewer will provide a familiar set of behaviors for manipulating the results, such as sorting by column, setting the page size, and customizing the column selection.
-In addition, it will provide basic data analysis features such as the ability to filter on a column or add a synthetic (calculated) column.
+In addition, it will provide basic data analysis features such as the ability to filter on a column or add synthetic (calculated) columns.
 For any row in a query result, the system will provide the ability to obtain a metadata-driven formatted view of all the data in the row --- a ``property sheet'' for the row --- which can be extended to the full width of the underlying table(s) (in effect performing a ``SELECT *'' on demand for a selected row in a narrower query result).
 By providing adequate metadata throughout the LSST data products, the Portal will be enabled to, for instance, display values together with their uncertainties in these property sheets.
 
-The Portal will recognize columns that are keys to information in other tables and will facilitate navigation to those tables for the related information.
+Based on database schema metadata available via the API Aspect, the Portal will recognize columns that are keys to information in other tables and will facilitate navigation to those tables for the related information.
 
 The Portal will provide for straightforward plotting of tabular data.
 It will provide for the creation of scatter (or line) charts for any selection of X and Y axes from the available columns or arithmetic expressions based on combinations of columns, with assistance from the UI in actions such as finding columns of interest to use or verifying the spelling of their names.
@@ -74,11 +74,11 @@ All query results --- tables and images --- will be available for download in ei
 Data may be downloaded either to the user's remote system (i.e., the system running the browser) or to the user's Science Platform workspace.
 The Portal Aspect will also support the creation of user databases based on tabular query results.
 
-In addition, all queries on LSST or LSST-hosted performed by the Portal through the API Aspect will be associated with the user and will be readily retrievable through the Notebook Aspect or directly through the API Aspect.
+In addition, all queries on LSST or LSST-hosted data performed by the Portal through the API Aspect will be associated with the user and will be readily retrievable through the Notebook Aspect or directly through the API Aspect.
 This capability, further discussed below, is the key to enabling seamless scientific workflows that cross the Aspects.
 It will also be possible for a user to browse their query history and select individual queries for re-execution or for download of the previous results (if they are still in the results cache).
 
-The Portal Aspect will provide for access to user data, both in the Science Platform's user workspace (which accommodates file-oriented data) and in user-created databases.
+The Portal Aspect will provide for access to user data, both in the Science Platform's User File Workspace (which accommodates generic file-oriented data) and in user-created databases.
 It will provide a traditional hierarchy-browser capability for the workspace, with the ability to inspect and visualize the contents of image or data table files of recognized types (e.g., FITS, VOTable, CSV).
 The workspace browser will also provide basic management functions for the organization of the workspace hierarchy, renaming and deletion of files, and the like.
 The Portal Aspect will provide for discovery, query, and visualization of user databases using the same generic data browsing tools as for the LSST data, though the sophistication of this interface will depend on the availability of adequate metadata for the user databases.
@@ -87,7 +87,7 @@ The generic data browsing capabilities of the Portal will also be available for 
 The semantic knowledge of the LSST data that the Portal is planned to exploit may be more limited for these hosted external datasets, but all the basic functions of the Portal will still be available.
 In addition, the Portal will be able to access any publicly available dataset that has a VO-standard interface, particularly a TAP/ADQL interface.
 Semantic features of the interface will be enhanced when external data (hosted or remotely accessed) are organized according to the CAOM model (in the case of observational metadata) and when queries return well-curated UCDs.
-Query results will be capable of being saved to the user workspace.
+Query results will be capable of being saved to the user file or database workspace.
 
 \subsection{Documentation Delivery}\label{documentation-delivery}
 
@@ -121,7 +121,7 @@ It will grow, with user feedback, to contain additional information of a ``FAQ''
 The user guide will contain examples that alert users to the breadth of capabilities they can expect to find in the Portal Aspect and motivate their use with scientific examples.
 Elements of the user guide will be linked to appropriate places in the UI as context-dependent help, but will also be available as part of the full document.
 
-Some parts of the user guide will naturally cross Aspects of the Science Platform --- for instance, a user-friendly explanation of the ``user workspace'' will naturally cover its availability and use from all three Aspects.
+Some parts of the user guide will naturally cross Aspects of the Science Platform --- for instance, a user-friendly explanation of the ``user workspace'' must cover its availability and use from all three Aspects.
 
 \subsubsection{Reference and Deployment Manuals}
 
