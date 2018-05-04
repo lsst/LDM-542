@@ -113,8 +113,9 @@ description, UCD when appropriate, unit when appropriate, and any relationship
 with other columns (e.g., so several columns making up a covariance matrix can
 be identified as such without resorting to pattern-matching of column names).
 
-\subsection{User Workspace access}\label{user-workspace-access}
+\subsection{User File Workspace access}\label{user-workspace-access}
 
-WebDAV and/or VOSpace will be provided for user workspace access.
-(FTP access will \textbf{NOT} be provided.)
-This service is implemented on top of an underlying filesystem provisioned as part of the LSP instance's computing resources.
+An IVOA VOSpace 2.1 service, as well as a WebDAV (IETF RFC 4918) service, will be provided for access to the User File Workspace.
+(FTP access will \emph{not} be provided.)
+These services will be implemented on top of an underlying filesystem provisioned as part of the LSP instance's computing resources.
+Each user will have a personal ``VOSpace home'' directory in this filesystem, which will also be mounted as a POSIX filesystem in the Notebook Aspect for that user, as described in \S~\ref{user-workspace-storage} above.
