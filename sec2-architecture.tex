@@ -245,6 +245,8 @@ All three Aspects will provide mechanisms for creating user catalogs; the
 Portal's mechanism will be implemented via the Web APIs, as usual.
 User catalogs may be accessed in the same ways that LSST catalog data products
 are accessed, and are visible in every Aspect.
+They may be shared with other users, as discussed further in
+\S~\ref{data-access-permissions-and-quotas}.
 
 User catalogs are backed up for disaster recovery purposes, but they are not
 fully protected against user error.
@@ -253,10 +255,13 @@ fully protected against user error.
 
 Users may create their own images and other files within the LSP.
 These all live within a User Workspace that is common across all three Aspects.
+Files in this Workspace may be shared with other users, as discussed further in
+\S~\ref{data-access-permissions-and-quotas}.
+
 All three Aspects will provide mechanisms for creating and retrieving user
-files.
+files in this Workspace.
 In the Notebook Aspect, this is via a mounted filesystem.  
-In the Web API Aspect, this is via VOSpace or WebDAV.
+In the Web API Aspect, this is via VOSpace (and most likely also WebDAV).
 The Portal Aspect will provide a file-browsing interface, will offer
 visualizations for certain recognized file types, such as image and table
 FITS files and common textual tabular file formats such as CSV, and will
@@ -279,7 +284,8 @@ Specifically, when logged in to the Notebook Aspect, the mounted User File
 Workspace seen by the user will be local to the Data Access Center.
 However, since the User File Workspace from each Science Platform instance
 is globally accessible via the VOSpace protocol in the API Aspect, it will be
-possible for a user at one DAC to get access to their workspace from another
+possible for a user at one DAC to get access \emph{via VOSpace}
+to their workspace from another DAC
 (presuming that they have access rights at both DACs in the first place),
 albeit perhaps at reduced performance compared to the DAC-local workspace.
 
@@ -293,16 +299,24 @@ not fully protected against user error.
 \subsubsection{Data Access Permissions and Quotas}\label{data-access-permissions-and-quotas}
 
 All LSST data products are available to all users with LSST data rights.
-Users may grant other users or groups of users access to data in their User
-File and/or Database Workspaces.
+In order to facilitate collaboration,
+users may grant other users or groups of users access to the personal data
+they have created in their User File and/or Database Workspaces.
 Such access may be read-only or read-write.
 
-The system is designed with the flexibility to permit users who had LSST data
-rights but have since lost them (e.g.,\ due to a change in country of
-employment) to continue to be granted access to Data Release data products
+The LSST authentication, authorization, and identity management tools will
+permit users to create and manage groups on their own, without support requests
+requiring human intervention.
+
+The system is designed with the flexibility to permit data rights to be
+granted per Data Release.
+This permits, for instance, the implementation of policies such as permitting
+users who previously had LSST data rights but have since lost them
+(e.g.,\ due to a change in national or institutional affiliation)
+to continue to be granted access to Data Release data products
 available as of the time of loss, but not newer ones.
-However, the actual policy in this are will be determined by the Operations
-organization.
+(This is an example only; the actual policies will be determined by the
+Operations organization.)
 
 Per-user catalogs and files are a limited resource with quotas determined by
 resource management (see section~\ref{resource-management}).
@@ -311,14 +325,21 @@ with a distinct quota.
 
 \subsubsection{Support of Previous Releases}\label{support-of-previous-releases}
 
-The LSST baseline currently anticipates that the data products contained in the
-last two Data Releases, as well as the Prompt / Level 1 data products from
-Alert Production) will be available through the LSST Science Platform.
+The LSST baseline currently anticipates that the data products contained in
+at least the most recent two Data Releases,
+as well as the Prompt / Level 1 data products from Alert Production,
+will be available through the LSST Science Platform.
 Data products from previous Data Releases would need to be retrieved via the
 Bulk Distribution service; they would not be visible within the LSP.
 
-A request to have the catalogs from all Data Releases be available through
-the LSP is currently being evaluated through the LSST Change Control process.
+However, the baseline also requires that the system be scalable to support
+keeping all releases loaded in the LSP, subject to the operations organization
+providing sufficient physical resources.\footnote{DMS-REQ-0364}
+It also states that the system ``should'' continue to support the original
+query behavior for as long as a release is loaded.\footnote{DMS-REQ-0371}
+(It does not require that queries against older releases automatically be
+usable against newer ones; it is recognized that the data model may evolve
+over time.)
 
 \subsection{Computing Resources}\label{computing-resources}
 
