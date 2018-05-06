@@ -117,19 +117,33 @@ It is by this means that we expect to provide access to the larger world of docu
 
 While the aim of the Portal design will be to make its use, and the features it provides, as evident as possible through the UI elements themselves, we nevertheless expect to provide a user guide to the Portal.
 The user guide will describe the major capabilities of the Portal, the options available associated with each major screen and function, and design specifics such as the use of user state vs. session state.
-It will grow, with user feedback, to contain additional information of a ``FAQ'' nature that has been found to be useful.
-The user guide will contain examples that alert users to the breadth of capabilities they can expect to find in the Portal Aspect and motivate their use with scientific examples.
+The user guide will contain examples and tutorials that alert both new and experienced users to the breadth of capabilities they can expect to find in the Portal Aspect and that motivate their use in a scientific context.
 Elements of the user guide will be linked to appropriate places in the UI as context-dependent help, but will also be available as part of the full document.
 
 Some parts of the user guide will naturally cross Aspects of the Science Platform --- for instance, a user-friendly explanation of the ``user workspace'' must cover its availability and use from all three Aspects.
 
-\subsubsection{Reference and Deployment Manuals}
+\subsubsection{Reference Manual}
 
-Along with the user guide, the Portal development project will also produce reference and deployment manuals.
-The reference manual will include API documentation for both the client and server components of the Portal, as well as documentation on the interfaces the Portal relies on with the rest of the LSST system.
+Along with the user guide, the Portal development project will also produce ``reference manual''-style documentation.
+Notably, the reference manual will include documentation on the user-accessible APIs for both the client and server components of the Portal.
+These APIs allow interaction with and control of specific components,
+the layout of the components in the Portal,
+and the programmatic retrieval of state from the Portal,
+as discussed in \S~\ref{api-interaction-portal} below,
+and should not be confused with the primary \emph{data} interfaces of the API Aspect.
+The Portal APIs, for instance, permit users to programmatically send images and tabular data to a Firefly session for visualization,
+or to construct customized versions of the Portal.
+The reference manual will also provide the information necessary for users to extend the Portal's behavior,
+as discussed in \S\S~\ref{extensibility-of-visualizations} and \ref{extensibility-of-the-ui} below.
 
-The deployment and maintenance manual will provide the information required to maintain the operation of the Portal in the context of the LSST infrastructure, including information on how to run and configure its components, and how to ensure that they are able to communicate successfully with the rest of the Science Platform components and infrastructure.
-It is intended primarily to be useful to the project's operations staff, but it will also be aimed at providing information useful to those who may wish to set up additional instances of the Science Platform outside the project.
+\subsubsection{Deployment, Maintenance, and Implementation Manual}
+
+The deployment, maintenance, and implementation manual will provide the information required to maintain the operation of the Portal in the context of the LSST infrastructure,
+including information on how to run and configure its components,
+and how to ensure that they are able to communicate successfully with the rest of the Science Platform components and LSST computing infrastructure.
+To this end, it will also include documentation on how the Portal uses the interfaces it relies on with the rest of the LSST system.
+It is intended primarily to be useful to the project's operations staff,
+but it will also be aimed at providing information useful to those who may wish to set up additional instances of the Science Platform outside the project.
 
 \subsection{Customized Workflows}\label{customized-workflows}
 
