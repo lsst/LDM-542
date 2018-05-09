@@ -11,7 +11,7 @@ provide non-VO-compliant access to catalogs, images, image mosaics, and image
 cutouts.  This section describes the ultimate goals for the LSP Web APIs and
 documents design features where they are already known.
 
-\subsection{Overview - VO services and custom LSST services}\label{api-overview}
+\subsection{Overview --- VO services and custom LSST services}\label{api-overview}
 
 The Web APIs support standard VO protocols where possible.  They will also
 support extensions to the VO protocols and additional custom LSST services that
@@ -88,7 +88,7 @@ Releases.
 
 Accordingly, the Data Release number is a key parameter that must be
 presented to the Web APIs.  Collections of datasets that are not part of
-a Data Release (e.g.\ in-process, unreleased data or intermediate data
+a Data Release (e.g., in-process, unreleased data or intermediate data
 products) are assigned labels that are used in place of the Data Release
 number.
 
@@ -103,18 +103,19 @@ Catalog and image metadata tables will be implemented through IVOA and
 community standards, when possible, such as those laid out by IVOA's ObsCore
 DM, VOResource/RegTap, and the CAOM2 data model. Even if direct usage of those
 models is not feasible, a best-effort export to them will be performed.  In
-such a case, the "native" metadta tables will be documented for direct access
+such a case, the ``native'' metadata tables will be documented for direct access
 by users through TAP.
 
 \subsubsection{Table Structure}\label{table-structure}
 
 Each table will have associated metadata that records, for each column, a
 description, UCD when appropriate, unit when appropriate, and any relationship
-with other columns (e.g. so several columns making up a covariance matrix can
+with other columns (e.g., so several columns making up a covariance matrix can
 be identified as such without resorting to pattern-matching of column names).
 
-\subsection{User Workspace access}\label{user-workspace-access}
+\subsection{User File Workspace access}\label{user-workspace-access}
 
-WebDAV and/or VOSpace will be provided for user workspace access.
-
-This service is implemented on top of an underlying filesystem provisioned as part of the LSP instance's computing resources.
+An IVOA VOSpace 2.1 service, as well as a WebDAV (IETF RFC 4918) service, will be provided for access to the User File Workspace.
+(FTP access will \emph{not} be provided.)
+These services will be implemented on top of an underlying filesystem provisioned as part of the LSP instance's computing resources.
+Each user will have a personal ``VOSpace home'' directory in this filesystem, which will also be mounted as a POSIX filesystem in the Notebook Aspect for that user, as described in \S~\ref{user-workspace-storage} above.

@@ -15,12 +15,12 @@ rests on computational infrastructure.
 The Portal Aspect, Notebook Aspect, and Web API Aspects provide three
 distinct user interfaces.
 Internally, the LSP interfaces with the LSST Data Facility (LDF)'s Data
-Backbone via the Data Butler Python client interface and direct 
+Backbone via the Data Butler Python client interface and direct
 ``native'' Data Backbone
 interfaces to provide access to the Science Data Archive and (for some
 instances) other data products.
 The LSP also has its own data storage for
-Portal configurations, user notebooks, and other user files and databases.  
+Portal configurations, user notebooks, and other user files and databases.
 It interfaces with compute provisioning services, authentication and
 authorization services, and resource management, including a proposal
 management system to handle requests for resources.
@@ -28,18 +28,18 @@ Networking connects the LSP with internal
 systems and the external world and provides a measure of cybersecurity.
 
 The Portal Aspect is implemented using the language-agnostic Web APIs to
-retrieve data.  
+retrieve data.
 Users of the Notebook Aspect can also use the Web APIs if they
-desire, either through a VO client library (e.g., \texttt{pyvo}, 
+desire, either through a VO client library (e.g., \texttt{pyvo},
 \texttt{astroquery}) or directly as a Web service.
 
 \subsubsection{Deployment Architecture}\label{deployment-architecture}
 
-The LSP is designed to be deployable in multiple locations within the LSST 
+The LSP is designed to be deployable in multiple locations within the LSST
 Data Management System (DMS).
 The production instances are the US Data Access Center, the Chilean Data Access
 Center, the Science Validation instance in the NCSA Enclave, and the
-Commissioning Cluster instance in the Base Enclave.  
+Commissioning Cluster instance in the Base Enclave.
 Additional instances are used for integration testing in the Integration
 environment (the Prototype Data Access Center) and for science
 pipelines developer usage in the Developer environment.
@@ -88,7 +88,7 @@ the time of imaging.
 It also includes information derived later from analyzing the data
 and metadata, such as an accurate mapping from pixel coordinates in an image to
 sky coordinates or an estimate of the photometric zeropoint in an image.
-The metadata will follow the Common Archive Observation 
+The metadata will follow the Common Archive Observation
 Model, version 2 \citep{2012ASPC..461..339D,CAOM2}, as its core.
 This metadata will be stored in relational databases and made available
 via ADQL queries.
@@ -119,7 +119,7 @@ information, as defined in the Information Classification Policy
 \citeds{LPM-122},
 which will not be available to users other than project staff.
 (The EFD will not contain any Protected User Data.)
-The Transformed EFD will be stored in a relational database, 
+The Transformed EFD will be stored in a relational database,
 accessible via ADQL queries.
 
 The Large File Annex (LFA) of the EFD will be carried over into the Transformed
@@ -146,11 +146,11 @@ Users creating their own catalogs (see section~\ref{user-catalog-data-support})
 will need to specify whether they are to be
 distributed, thereby selecting the appropriate back-end implementation.
 
-In addition to this, the Data Access team is exploring the possibility of 
+In addition to this, the Data Access team is exploring the possibility of
 hosting a replica of selected catalog data in a non-database form in order to
-facilitate analysis with contemporary data-science workflow systems, e.g., 
+facilitate analysis with contemporary data-science workflow systems, e.g.,
 in the form of Apache Parquet files.
-This work is being done in the context of fulfilling the requirement to 
+This work is being done in the context of fulfilling the requirement to
 define the long-anticipated ``Next to Database Analysis'' system that was
 mooted in the original DM designs.
 
@@ -162,7 +162,7 @@ Archive in the Data Backbone.  All of these are accessible to the LSP.
 
 Some data products are currently specified to be ``virtual'': they are
 regenerated on demand from other persistently-stored data products.
-The choice of which Data Products to treat in this matter arises from 
+The choice of which Data Products to treat in this matter arises from
 estimates of the technology-dependent space/time cost trade-offs and as
 such may be revisited during the Operations era as technology evolves.
 Such virtual data products are regenerated for the LSP by services that are
@@ -204,13 +204,13 @@ directly visible to the user in the LSP in the Notebook Aspect.
 \subsubsection{Data Access Services}\label{data-access-services}
 
 The LSP Web API Aspect provides services to retrieve catalog and image data
-products.  
+products.
 Access to catalog data products is provided by a Web service that
 supports the VO TAP protocol \citep{2010ivoa.spec.0327D} with queries specified
 in ADQL \citep{2008ivoa.spec.1030O}.
 Access to image
 and file data products is provided by a separate Web service that supports the
-VO SIA \citep{2015ivoa.spec.1223D}, SODA, and VOSpace \citep{2013ivoa.spec.0329G} protocols.  
+VO SIA \citep{2015ivoa.spec.1223D}, SODA, and VOSpace \citep{2013ivoa.spec.0329G} protocols.
 The image and file service is also
 responsible for regenerating ``virtual'' data products and converting from
 internal to external data formats as necessary.
@@ -226,7 +226,7 @@ Within the Notebook Aspect, and internal to the Web API Aspect, the Data
 Butler client interface may be used to retrieve Python objects, and a
 ``native'' Data Backbone API may be used for high-performance retrieval of
 datasets.
-The Portal Aspect primarily uses the Web API Aspect for data access, 
+The Portal Aspect primarily uses the Web API Aspect for data access,
 though the Data Butler and ``native'' Data Backbone API may be used in Python
 plugins that provide support for access to, and visualization of, LSST-specific
 complex datatypes.
@@ -234,7 +234,7 @@ complex datatypes.
 \subsubsection{User Catalog Data Support}\label{user-catalog-data-support}
 
 Users may create their own catalogs within the LSP, a capability that is
-patterned after SDSS SkyServer's ``MyDB''.  
+patterned after SDSS SkyServer's ``MyDB''.
 Catalogs may be derived from queries
 to the LSST catalogs or loaded from computations or external data sources.  As
 mentioned above in section~\ref{database-technologies}, large distributed
@@ -245,6 +245,8 @@ All three Aspects will provide mechanisms for creating user catalogs; the
 Portal's mechanism will be implemented via the Web APIs, as usual.
 User catalogs may be accessed in the same ways that LSST catalog data products
 are accessed, and are visible in every Aspect.
+They may be shared with other users, as discussed further in
+\S~\ref{data-access-permissions-and-quotas}.
 
 User catalogs are backed up for disaster recovery purposes, but they are not
 fully protected against user error.
@@ -253,10 +255,13 @@ fully protected against user error.
 
 Users may create their own images and other files within the LSP.
 These all live within a User Workspace that is common across all three Aspects.
+Files in this Workspace may be shared with other users, as discussed further in
+\S~\ref{data-access-permissions-and-quotas}.
+
 All three Aspects will provide mechanisms for creating and retrieving user
-files.
-In the Notebook Aspect, this is via a mounted filesystem.  
-In the Web API Aspect, this is via VOSpace or WebDAV.
+files in this Workspace.
+In the Notebook Aspect, this is via a mounted filesystem.
+In the Web API Aspect, this is via VOSpace (and most likely also WebDAV).
 The Portal Aspect will provide a file-browsing interface, will offer
 visualizations for certain recognized file types, such as image and table
 FITS files and common textual tabular file formats such as CSV, and will
@@ -270,16 +275,17 @@ shell services) will \emph{not} be part of the User File Workspace \emph{per
 se} and so will not be visible via VOSpace.
 This is motivated by both security considerations and to provide flexibility
 for the Notebook Aspect in implementation.
-We expect that the filesystem mount of the User File Workspace will be 
+We expect that the filesystem mount of the User File Workspace will be
 linked as a standard subdirectory of the user's home directory.
 
-We currently do not expect that the User File Workspace will be shared 
+We currently do not expect that the User File Workspace will be shared
 across DACs.
 Specifically, when logged in to the Notebook Aspect, the mounted User File
 Workspace seen by the user will be local to the Data Access Center.
 However, since the User File Workspace from each Science Platform instance
 is globally accessible via the VOSpace protocol in the API Aspect, it will be
-possible for a user at one DAC to get access to their workspace from another
+possible for a user at one DAC to get access \emph{via VOSpace}
+to their workspace from another DAC
 (presuming that they have access rights at both DACs in the first place),
 albeit perhaps at reduced performance compared to the DAC-local workspace.
 
@@ -293,16 +299,24 @@ not fully protected against user error.
 \subsubsection{Data Access Permissions and Quotas}\label{data-access-permissions-and-quotas}
 
 All LSST data products are available to all users with LSST data rights.
-Users may grant other users or groups of users access to data in their User
-File and/or Database Workspaces.
+In order to facilitate collaboration,
+users may grant other users or groups of users access to the personal data
+they have created in their User File and/or Database Workspaces.
 Such access may be read-only or read-write.
 
-The system is designed with the flexibility to permit users who had LSST data
-rights but have since lost them (e.g.,\ due to a change in country of
-employment) to continue to be granted access to Data Release data products
+The LSST authentication, authorization, and identity management tools will
+permit users to create and manage groups on their own, without support requests
+requiring human intervention.
+
+The system is designed with the flexibility to permit data rights to be
+granted per Data Release.
+This permits, for instance, the implementation of policies such as permitting
+users who previously had LSST data rights but have since lost them
+(e.g.,\ due to a change in national or institutional affiliation)
+to continue to be granted access to Data Release data products
 available as of the time of loss, but not newer ones.
-However, the actual policy in this are will be determined by the Operations
-organization.
+(This is an example only; the actual policies will be determined by the
+Operations organization.)
 
 Per-user catalogs and files are a limited resource with quotas determined by
 resource management (see section~\ref{resource-management}).
@@ -311,14 +325,21 @@ with a distinct quota.
 
 \subsubsection{Support of Previous Releases}\label{support-of-previous-releases}
 
-The LSST baseline currently anticipates that the data products contained in the
-last two Data Releases, as well as the Prompt / Level 1 data products from
-Alert Production) will be available through the LSST Science Platform.
+The LSST baseline currently anticipates that the data products contained in
+at least the most recent two Data Releases,
+as well as the Prompt / Level 1 data products from Alert Production,
+will be available through the LSST Science Platform.
 Data products from previous Data Releases would need to be retrieved via the
 Bulk Distribution service; they would not be visible within the LSP.
 
-A request to have the catalogs from all Data Releases be available through
-the LSP is currently being evaluated through the LSST Change Control process.
+However, the baseline also requires that the system be scalable to support
+keeping all releases loaded in the LSP, subject to the operations organization
+providing sufficient physical resources.\footnote{DMS-REQ-0364}
+It also states that the system ``should'' continue to support the original
+query behavior for as long as a release is loaded.\footnote{DMS-REQ-0371}
+(It does not require that queries against older releases automatically be
+usable against newer ones; it is recognized that the data model may evolve
+over time.)
 
 \subsection{Computing Resources}\label{computing-resources}
 
