@@ -1,6 +1,4 @@
-\section{Large Data Facility Deployment}\label{large-data-facility-deployment}
-
-Data Facility Deployment
+\section{LSST Data Facility Deployment}\label{lsst-data-facility-deployment}
 
 The LSST Data Facility will operate several instances of the LSP services for different use cases within the project and for community data access within the two LSST Data Access Centers. The underlying system software infrastructure for hosting LSP services is Kubernetes.  These services will access batch services and the Data Backbone. Installation of Kubernetes is done with a combination of Puppet scripts to deploy software packages for installation. The Kubernetes “kubeadm” utility is used for configuring Kubernetes, and its network overlay, Weave.  Underlying support services, such as etcd and the local container repository, are also part of this infrastructure.  Security and monitoring software are put in place to supervise the activity of the host systems and containers.
 
