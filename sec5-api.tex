@@ -11,6 +11,37 @@ provide non-VO-compliant access to catalogs, images, image mosaics, and image
 cutouts.  This section describes the ultimate goals for the LSP Web APIs and
 documents design features where they are already known.
 
+The Web APIs will be accessed both from within the single-sign-on authentication
+and authorization environment of the Science Platform and externally.
+Internal uses will arise from the Science Platform implementation itself,
+principally from the Portal Aspect, as well as from individual user activities
+within the Notebook Aspect environment, accessing the Web API Aspect services
+using Python interfaces.
+
+External uses will arise from a variety of sources, including pre-built client
+applications such as TOPCAT, client libraries such as PyVO and Astroquery
+invoked by users in their own code, and direct programming against the
+HTTPS interfaces of the Web API services.
+
+For IVOA-standard services such as TAP, the Project will periodically test
+them with available validation tools such as \texttt{taplint}, as well as
+with common client applications and libraries.
+In particular, it is the intent of the Project to verify that the PyVO library
+can be used successfully with the applicable Web API Aspect services.
+(At this time, PyVO has support for TAP, basic support for DataLink, and
+recently added support for SIAv2.)
+If there are standards-conformance issues with PyVO, the Project may be able
+to contribute effort to the improvement of the library on an open-source basis.
+
+External users will require a means to obtain and provide Science Platform
+authorization credentials ``by hand'', since their access won't be mediated by
+Web-based front ends as they are in the Portal Aspect and Notebook Aspect.
+The Project will provide and document straightforward means for obtaining
+authorization tokens, and document examples of their use with common tools
+such as TOPCAT and PyVO.
+This may include the provision of ``helper functions'' to assist users in
+supplying credentials.
+
 \subsection{Overview --- VO services and custom LSST services}\label{api-overview}
 
 The Web APIs support standard VO protocols where possible.  They will also
