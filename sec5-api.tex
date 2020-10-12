@@ -23,9 +23,9 @@ applications such as TOPCAT, client libraries such as PyVO and Astroquery
 invoked by users in their own code, and direct programming against the
 HTTPS interfaces of the Web API services.
 
-For IVOA-standard services such as TAP, the Project will periodically test
-them with available validation tools such as \texttt{taplint}, as well as
-with common client applications and libraries.
+For IVOA-standard services such as TAP, the Project will periodically test them
+with available validation tools such as \texttt{taplint} \citep{TaplintLink2006ASPC..351..666T}, 
+as well as with common client applications and libraries.
 In particular, it is the intent of the Project to verify that the PyVO library
 can be used successfully with the applicable Web API Aspect services.
 (At this time, PyVO has support for TAP, basic support for DataLink, and
@@ -87,13 +87,14 @@ the \texttt{imgserv} endpoint.
 
 \subsubsection{Image finding}\label{image-finding}
 
-Image discovery will be facilitated through an implementation of the IVOA SIA
-V2 interface. Simple implementations of SIA allow direct access to files
+Image discovery will be facilitated through an implementation of the IVOA 
+SIAv2 interface \citep{2015ivoa.spec.1223D}.
+Simple implementations of SIA allow direct access to files
 available via HTTP by adding a link to the SIA response; \texttt{imgserv} will
-use that attribute in the SIA response to link to another service. Image
-metadata will also be facilitated through TAP, as image metadata will be
+use that attribute in the SIA response to link to another service.
+Image metadata access will also be facilitated through TAP, as image metadata will be
 available according in the database through implementations of the IVOA ObsCore
-Data Model \citep{2011ivoa.spec.1028T} and the CAOM2 data model, as well as LSST-native
+Data Model \citep{2017ivoa.spec.0509L} and the CAOM2 data model, as well as LSST-native
 image metadata representations.
 
 \subsubsection{Image retrieval}\label{image-retrieval}
